@@ -1,11 +1,10 @@
 {
-    "manifest_version": 3,
-    "name": "Test Extension",
-    "version": "1.0",
-    "description": "Description of your extension",
-    "permissions": [],
-    "action": {
-      "default_popup": "index.html"
-    }
+  "manifest_version": 3,
+  "name": "Test Extension",
+  "version": "1.0",
+  "description": "Description of your extension",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "action": {
+    "default_popup": "index.html"
   }
-  
+}
