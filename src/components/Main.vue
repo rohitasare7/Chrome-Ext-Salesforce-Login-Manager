@@ -6,7 +6,7 @@ import { encrypt } from '@/assets/helper';
 // note : main storage list : recordList
 const encryptionKey = 'salesForceManager19032024';
 let records = [];
-let dataEntries = ref([]); // to render on UI but ignore for now
+//let dataEntries = ref([]); // to render on UI but ignore for now
 let storage = chrome.storage.sync;
 
 const formData = ref({
@@ -96,48 +96,58 @@ function clearForm() {
 </script>
 
 <template>
-    <div class="row">
-        <div class="col col-6-lg">
-        <form @submit.prevent="submitForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" v-model="formData.username" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="formData.password" required>
+    <form @submit.prevent="submitForm" class="space-y-4">
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+                <label for="username"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username:</label>
+                <input type="text" id="username" v-model="formData.username" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+            </div>
+            <div>
+                <label for="password"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password:</label>
+                <input type="password" id="password" v-model="formData.password" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+            </div>
+            <div>
+                <label for="orgType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Org Type
+                    :</label>
+                <select id="orgType" v-model="formData.orgType" @change="toggleCustomOrgInput"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+                    <option value="dev">Sandbox</option>
+                    <option value="prod">Production</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            <div v-if="formData.orgType === 'custom'">
+                <input v-if="formData.orgType === 'custom'" type="text" id="customOrgUrl"
+                    v-model="formData.customOrgUrl" placeholder="Custom Org URL"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
-            <label for="orgType">Organization Type:</label>
-            <select id="orgType" v-model="formData.orgType" @change="toggleCustomOrgInput">
-                <option value="dev">Development</option>
-                <option value="prod">Production</option>
-                <option value="custom">Custom</option>
-            </select>
+            </div>
+            <div>
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name:</label>
+                <input type="text" id="name" v-model="formData.name" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded">
+                Submit
+            </button>
+        </div>
+    </form>
+    
+    <button @click="fetchData"
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded inline-block mt-4 ml-2">
+        Fetch
+    </button>
 
-            <input v-if="formData.orgType === 'custom'" type="text" id="customOrgUrl" v-model="formData.customOrgUrl"
-                placeholder="Custom Org URL">
 
-            <label for="name">Name:</label>
-            <input type="text" id="name" v-model="formData.name" required>
-
-            <button type="submit" class="button primary">Submit</button>
-        </form>
-        <button @click="fetchData">fetch</button>
-    </div>
-        <ul>
-            <li v-for="(entry, index) in dataEntries" :key="index">
-                <span>{{ entry.username }}</span>
-                <span>{{ entry.orgType }}</span>
-                <span v-if="entry.orgType === 'custom'">{{ entry.customOrgUrl }}</span>
-                <span>{{ entry.name }}</span>
-            </li>
-        </ul>
-    </div>
 </template>
 
 <script>
 export default {
-    name: 'TestA',
-    props: {
-        msg: String
-    }
+    name: 'MainSFLoginComp',
 }
 </script>
