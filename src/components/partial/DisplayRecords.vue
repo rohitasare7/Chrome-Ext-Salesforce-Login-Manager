@@ -254,9 +254,10 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
-    
+
     <div v-else-if="filteredRecords.length == 0">
-        <p class="my-6 text-base font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Please click "Add Org" button to create a record.</p>
+        <p class="my-6 text-base font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Please click
+            "Add Org" button to create a record.</p>
     </div>
 
 </template>
