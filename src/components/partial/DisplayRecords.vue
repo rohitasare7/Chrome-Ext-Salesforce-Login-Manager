@@ -109,45 +109,14 @@ const updateRecord = async (id, newData) => {
         }
     });
     saveToChrome(existingRecords);
-    // storage.set({ recordList: existingRecords }, () => {
-    //     console.log('data saved');
-    // });
     records.value = existingRecords;
     isEditing.value = false;
 }
-
-// Function to update an item in the records array
-const updateRecord_old = (id, newData) => {
-    console.log('newData --> ' + JSON.stringify(newData));
-    const index = records.value.findIndex(record => record.id === id);
-    if (index !== -1) {
-        // Update the username and password fields directly
-        console.log('username --> ' + newData.username);
-        records.value[index].username = encrypt(newData.username);
-        records.value[index].password = encrypt(newData.password);
-        records.value[index].orgType = newData.orgType;
-        records.value[index].orgURL = newData.orgURL;
-        records.value[index].name = newData.name;
-        records.value[index].timeStamp = Date.now();
-        records.value.push(records.value[index]);
-    }
-    else {
-        console.error('Record not found with id:', id);
-    }
-    console.log('records.value --> ' + JSON.stringify(records.value));
-    //save to chrome
-    storage.set({ recordList: records.value }, () => {
-        console.log('data saved');
-    });
-    //console.log('records 2 --> ' + JSON.stringify(records.value));
-    isEditing.value = false;
-};
 
 const handleEvent = (data) => {
     console.log('event data --> ' + JSON.stringify(data.value));
     updateRecord(data.value.id, data.value);
 }
-
 
 // Init
 onMounted(() => {
