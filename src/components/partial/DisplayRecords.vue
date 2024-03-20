@@ -30,11 +30,6 @@ const editItem = (index) => {
     console.log('Edit item:', index);
 };
 
-const deleteItem = (index) => {
-    // Handle edit functionality
-    console.log('Edit item:', index);
-};
-
 const getOrgURL = (orgType, orgUrl) => {
     if (orgType === 'dev') {
         return 'https://test.salesforce.com';
@@ -74,6 +69,19 @@ const openWindow = (index, isIncognito) => {
     });
 };
 
+const deleteItem = (id) => {
+    // Handle edit functionality
+    const index = records.value.findIndex(item => item.id === id);
+    if (index !== -1) {
+        records.value.splice(index, 1);
+        storage.set({ recordList: records.value }, () => {
+            console.log('Item deleted successfully');
+        });
+    } else {
+        console.error('Item not found');
+    }
+};
+
 </script>
 
 <template>
@@ -81,7 +89,6 @@ const openWindow = (index, isIncognito) => {
     <div>
         <div class="container mx-auto mb-4">
             <table class="table-auto w-full border-collapse">
-
                 <tbody>
                     <tr v-for="(item) in records" :key="item.id" class="border">
                         <td class="px-4 py-2">{{ item.name }}</td>

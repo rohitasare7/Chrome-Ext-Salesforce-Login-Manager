@@ -5,7 +5,6 @@ import { encrypt, decrypt } from '@/assets/helper';
 
 // note : main storage list : recordList
 let records = [];
-//let dataEntries = ref([]); // to render on UI but ignore for now
 let storage = chrome.storage.sync;
 
 const formData = ref({
@@ -26,9 +25,11 @@ onMounted(() => {
 const fetchData = () => {
     storage.get('recordList', (result) => {
         console.log('result --> ' + JSON.stringify(result));
-        result.recordList.forEach(item => {
-            console.log(decrypt(item.username));
-        });
+        //records.value = [];
+        records.value = result.recordList;
+        // result.recordList.forEach(item => {
+        //    console.log(decrypt(item.username));
+        // });
     });
 }
 
@@ -68,7 +69,6 @@ function toggleCustomOrgInput() {
     }
 }
 
-
 async function submitForm() {
     //Encrypt the sensitive data
     formData.value.username = encrypt(formData.value.username);
@@ -78,13 +78,23 @@ async function submitForm() {
     formData.value.id = indexId + 1;
     //Add timestamp
     formData.value.timeStamp = Date.now();
-    //formData.value.orgURL = getOrgURL(formData.value.orgType);
-    //push data to list
-    records.push(formData.value);
-    //set data in chrome storage
-    storage.set({ recordList: records }, () => {
+    
+    //Wrap storage.get in a Promise to await its completion
+    const existingRecords = await new Promise((resolve, reject) => {
+        storage.get('recordList', (result) => {
+            const existingRecords = result.recordList || [];
+            resolve(existingRecords);
+        });
+    });
+    
+    // Append the new record to the existing records
+    existingRecords.push(formData.value);
+    
+    // Save the updated records back to Chrome storage
+    storage.set({ recordList: existingRecords }, () => {
         console.log('data saved');
     });
+
     clearForm();
 }
 

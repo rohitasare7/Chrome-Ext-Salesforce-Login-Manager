@@ -7,6 +7,7 @@ export function encrypt(data) {
   return CryptoJS.AES.encrypt(data, encryptionKey).toString();
 }
 
+//Decryption function
 export function decrypt(data) {
   return CryptoJS.AES.decrypt(data, encryptionKey).toString(CryptoJS.enc.Utf8);
 }
