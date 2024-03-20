@@ -222,7 +222,7 @@ onMounted(() => {
     </div>
     <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
 
-    <div v-if="!showForm" class="container mx-auto mb-4">
+    <div v-if="!showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id"
@@ -231,7 +231,7 @@ onMounted(() => {
                     <td class="mr-2">
                         <div class="flex items-center justify-center my-1">
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
-                                @click="openTab(item.id)">Tab</button>
+                                @click="openTab(item.id)">New Tab</button>
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
                                 @click="openWindow(item.id, false)">Window</button>
                             <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md mr-2"
@@ -254,7 +254,10 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
-
+    
+    <div v-else-if="filteredRecords.length == 0">
+        <p class="my-6 text-base font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Please click "Add Org" button to create a record.</p>
+    </div>
 
 </template>
 
