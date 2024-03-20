@@ -1,6 +1,6 @@
 <script setup>
 /*global chrome*/
-import { ref, onMounted , computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import RecordForm from '@/components/partial/RecordForm';
 import { decrypt, encrypt } from '@/assets/helper';
 
@@ -184,11 +184,11 @@ const handleEvent = (data) => {
 }
 
 const filteredRecords = computed(() => {
-  const search = searchKey.value.toLowerCase();
-  if (!search) {
-    return records.value; // Return all records if search key is empty
-  }
-  return records.value.filter(record => record.name.toLowerCase().includes(search));
+    const search = searchKey.value.toLowerCase();
+    if (!search) {
+        return records.value; // Return all records if search key is empty
+    }
+    return records.value.filter(record => record.name.toLowerCase().includes(search));
 });
 
 // Init
@@ -211,7 +211,7 @@ const saveRecordsToChromeOld = (itemList) => {
 
 <template>
 
-    <div class="flex mb-4">
+    <div class="flex mb-4" v-if="!showForm">
         <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."
             class="max-w-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
@@ -232,29 +232,30 @@ const saveRecordsToChromeOld = (itemList) => {
     <div v-if="!showForm" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse">
             <tbody>
-                <tr v-for="(item) in filteredRecords" :key="item.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-4 py-2">{{ item.name }}</td>
-                    <td class="px-4 py-2">
-                        <button @click="editItem(item.id)" class="text-blue-500">
-                            <span class="material-symbols-rounded">
-                                edit_square
-                            </span>
-                        </button>
-                    </td>
-                    <td class="px-4 py-2">
-                        <button @click="deleteItem(item.id)" class="text-rose-600">
-                            <span class="material-symbols-rounded">
-                                delete
-                            </span>
-                        </button>
-                    </td>
-                    <td class="px-4 py-2">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mr-2"
-                            @click="openTab(item.id)">New Tab</button>
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mr-2"
-                            @click="openWindow(item.id, false)">Window</button>
-                        <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded"
-                            @click="openWindow(item.id, true)">Incognito</button>
+                <tr v-for="(item) in filteredRecords" :key="item.id"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 mb-4">
+                    <td class="px-4 py-2 min-w-48">{{ item.name }}</td>
+                    <td class="mr-2">
+                        <div class="flex items-center justify-center my-2">
+                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+                                @click="openTab(item.id)">Tab</button>
+                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+                                @click="openWindow(item.id, false)">Window</button>
+                            <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md mr-2"
+                                @click="openWindow(item.id, true)">Incognito</button>
+                            <button @click="editItem(item.id)"
+                                class="text-blue-500 mr-2 bg-blue-200 hover:text-blue-700 hover:bg-blue-300 rounded-full iconBtn transition-colors duration-300 mr-2">
+                                <span class="material-symbols-rounded">
+                                    edit_square
+                                </span>
+                            </button>
+                            <button @click="deleteItem(item.id)"
+                                class="text-rose-600 bg-rose-200 hover:text-rose-700 hover:bg-rose-300 rounded-full iconBtn transition-colors duration-300">
+                                <span class="material-symbols-rounded">
+                                    delete
+                                </span>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -269,3 +270,15 @@ export default {
     name: 'DisplayRecordsComp',
 }
 </script>
+
+<style scoped>
+.iconBtn {
+    padding: 7px 8px;
+    margin: 5px 4px;
+    line-height: 12px;
+}
+
+.iconBtn:hover {
+    transition: background-color 0.3s;
+}
+</style>
