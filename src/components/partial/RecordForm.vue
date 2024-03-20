@@ -6,24 +6,11 @@ import { encrypt, decrypt } from '@/assets/helper';
 // note : main storage list : recordList
 const props = defineProps({
     itemData: Object,
-    username: String,
-    password: String,
-    orgType: {
-        type: String,
-        default: 'dev'
-    },
-    orgURL: String,
-    name: String,
-    timeStamp: String,
-    id: {
-        type: Number,
-        default: 0
-    }
 });
 
 const formData = ref({
-    username: props.itemData.username ?? '',
-    password: props.itemData.password ?? '',
+    username: props.itemData.username ? decrypt(props.itemData.username) : '',
+    password: props.itemData.password ? decrypt(props.itemData.password) : '',
     orgType: props.itemData.orgType ?? 'dev',
     orgURL: props.itemData.orgURL ?? '',
     name: props.itemData.name ?? '',
@@ -47,8 +34,8 @@ async function submitForm() {
 
 watch(() => props.itemData, (newValue) => {
     if (newValue) {
-        formData.value.username = newValue.username || '';
-        formData.value.password = newValue.password || '';
+        formData.value.username = decrypt(newValue.username) || '';
+        formData.value.password = decrypt(newValue.password) || '';
         formData.value.orgType = newValue.orgType || 'dev';
         formData.value.orgURL = newValue.orgURL || '';
         formData.value.name = newValue.name || '';
