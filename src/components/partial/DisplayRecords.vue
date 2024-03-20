@@ -7,7 +7,6 @@ const encryptionKey = 'salesForceManager19032024';
 let records = ref([]);
 let storage = chrome.storage.sync;
 
-
 const fetchData = () => {
     storage.get('recordList', (result) => {
         console.log('rec list --> ' + JSON.stringify(result));
@@ -20,9 +19,10 @@ onMounted(() => {
     fetchData();
 });
 
-const fetchItemData = () => {
-    let item = {};
-    
+const fetchItemData = (index) => {
+    let item = null;
+    item = records.value.find(item => item.id === index);
+    return item;
 }
 
 const editItem = (index) => {
@@ -35,11 +35,32 @@ const deleteItem = (index) => {
     console.log('Edit item:', index);
 };
 
+const getOrgURL = (orgType, orgUrl) => {
+    if (orgType === 'dev') {
+        return 'https://test.salesforce.com';
+    }
+    else if (orgType === 'prod') {
+        return 'https://login.salesforce.com';
+    }
+    else {
+        return orgUrl;
+    }
+}
+
 const openTab = (index) => {
-    // Handle open in tab functionality
+
+    let item = fetchItemData(index);
+    let orgURL = getOrgURL(item.orgType, item.orgURL);
+
+    const url = orgURL;
+    const username = item.username;
+    const pass = item.password;
+
+    //Handle open in tab functionality
     console.log('Open in tab:', index);
     chrome.tabs.create({
-        url: `${chrome.runtime.getURL('login.html')}`,
+        //url: `${chrome.runtime.getURL('login.html')}`,
+        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
     });
 };
 
@@ -48,10 +69,10 @@ const openWindow = (index, isIncognito) => {
     console.log('Open in window:', index);
     chrome.windows.create({
         url: `${chrome.runtime.getURL('login.html')}`,
+        // url: `${chrome.runtime.getURL('login.html')}?a=${ url }&b=${ePassword}&c=${eUsername}`,
         incognito: isIncognito
     });
 };
-
 
 </script>
 

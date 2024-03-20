@@ -1,10 +1,9 @@
 <script setup>
 /*global chrome*/
 import { ref, onMounted } from 'vue';
-import { encrypt } from '@/assets/helper';
+import { encrypt, decrypt } from '@/assets/helper';
 
 // note : main storage list : recordList
-const encryptionKey = 'salesForceManager19032024';
 let records = [];
 //let dataEntries = ref([]); // to render on UI but ignore for now
 let storage = chrome.storage.sync;
@@ -13,7 +12,7 @@ const formData = ref({
     username: '',
     password: '',
     orgType: 'dev',
-    customOrgUrl: '',
+    orgURL: '',
     name: '',
     timeStamp: '',
     id: 0
@@ -27,6 +26,9 @@ onMounted(() => {
 const fetchData = () => {
     storage.get('recordList', (result) => {
         console.log('result --> ' + JSON.stringify(result));
+        result.recordList.forEach(item => {
+            console.log(decrypt(item.username));
+        });
     });
 }
 
@@ -62,19 +64,21 @@ const fetchLastIndex = () => {
 
 function toggleCustomOrgInput() {
     if (formData.value.orgType !== 'custom') {
-        formData.value.customOrgUrl = ''; // Clear custom org URL if org type changes
+        formData.value.orgURL = ''; // Clear custom org URL if org type changes
     }
 }
 
+
 async function submitForm() {
     //Encrypt the sensitive data
-    formData.value.username = encrypt(formData.value.username, encryptionKey);
-    formData.value.password = encrypt(formData.value.password, encryptionKey);
+    formData.value.username = encrypt(formData.value.username);
+    formData.value.password = encrypt(formData.value.password);
     //get last index for record
     let indexId = await fetchLastIndex();
     formData.value.id = indexId + 1;
     //Add timestamp
     formData.value.timeStamp = Date.now();
+    //formData.value.orgURL = getOrgURL(formData.value.orgType);
     //push data to list
     records.push(formData.value);
     //set data in chrome storage
@@ -89,7 +93,7 @@ function clearForm() {
         username: '',
         password: '',
         orgType: 'dev',
-        customOrgUrl: '',
+        orgURL: '',
         name: ''
     };
 }
@@ -122,8 +126,8 @@ function clearForm() {
                 </select>
             </div>
             <div v-if="formData.orgType === 'custom'">
-                <input v-if="formData.orgType === 'custom'" type="text" id="customOrgUrl"
-                    v-model="formData.customOrgUrl" placeholder="Custom Org URL"
+                <input v-if="formData.orgType === 'custom'" type="text" id="orgURL" v-model="formData.orgURL"
+                    placeholder="Custom Org URL"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
             </div>
@@ -137,7 +141,7 @@ function clearForm() {
             </button>
         </div>
     </form>
-    
+
     <button @click="fetchData"
         class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded inline-block mt-4 ml-2">
         Fetch

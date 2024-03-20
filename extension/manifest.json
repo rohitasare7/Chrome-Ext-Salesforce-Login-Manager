@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Test Extension",
+  "name": "Salesforce Login Manager",
   "version": "1.0",
-  "description": "Description of your extension",
+  "description": "Login to Salesforce Org easily without opening login page.",
   "permissions": ["activeTab", "contextMenus", "storage"],
   "action": {
     "default_popup": "index.html"

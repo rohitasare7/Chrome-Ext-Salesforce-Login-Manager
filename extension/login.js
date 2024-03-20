@@ -1,35 +1,39 @@
-var QueryString = function () {
-    // This function is anonymous, is executed immediately and 
-    // the return value is assigned to QueryString!
-    var query_string = {};
-    var query = window.location.search.substring(1);
-    var vars = query.split("&");
-    for (var i=0;i<vars.length;i++) {
-      var pair = vars[i].split("=");
-          // If first entry with this name
-      if (typeof query_string[pair[0]] === "undefined") {
-        query_string[pair[0]] = decodeURIComponent(pair[1]);
-          // If second entry with this name
-      } else if (typeof query_string[pair[0]] === "string") {
-        var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-        query_string[pair[0]] = arr;
-          // If third or later entry with this name
-      } else {
-        query_string[pair[0]].push(decodeURIComponent(pair[1]));
-      }
-    } 
-      return query_string;
-  }();
-  
-  document.onreadystatechange = function() {
-      
-      var url = 'https://login.salesforce.com';
-      var password = 'password@123A';
-      var username = 'thatsfdcguy@voucher.system.dev';
-      
-      document.forms[0].action = url;
-      document.getElementById('username').value = username;
-      document.getElementById('password').value = password;
-      
-      document.forms[0].submit();    
-  };
+//Get Username, Password, URL From Login.html url
+//import { decrypt } from "/js/crypto.js";
+
+function getParams() {
+  const params = {};
+  const search = window.location.search.substring(1);
+  const pairs = search.split("&");
+
+  for (const pairString of pairs) {
+    const [key, value] = pairString.split("=");
+    const decodedValue = decodeURIComponent(value);
+
+    if (params[key] === undefined) {
+      params[key] = decodedValue;
+    } else if (typeof params[key] === "string") {
+      params[key] = [params[key], decodedValue];
+    } else {
+      params[key].push(decodedValue);
+    }
+  }
+  return params;
+}
+
+function decryptItem(data) {
+  const encryptionKey = "salesForceManager19032024";
+  // eslint-disable-next-line no-undef
+  return CryptoJS.AES.decrypt(data, encryptionKey).toString(CryptoJS.enc.Utf8);
+}
+
+//submit the form
+document.onreadystatechange = function () {
+  const item = getParams();
+  const form = document.querySelector("form");
+  form.action = item.url;
+  //document.getElementById("username").value = decrypt(item.un); decrypt(item.pw);
+  document.getElementById("username").value = decryptItem(item.un);
+  document.getElementById("password").value = decryptItem(item.pw);
+  form.submit(); //let the magic happen
+};

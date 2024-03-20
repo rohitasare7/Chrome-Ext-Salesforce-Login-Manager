@@ -1,12 +1,12 @@
 import CryptoJS from "crypto-js";
 
-// Encryption function
-export function encrypt(data, secretKey) {
-  return CryptoJS.AES.encrypt(data, secretKey).toString();
+const encryptionKey = "salesForceManager19032024";
+
+//Encryption function
+export function encrypt(data) {
+  return CryptoJS.AES.encrypt(data, encryptionKey).toString();
 }
 
-// Decryption function
-export function decrypt(encryptedData, secretKey) {
-  const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-  return bytes.toString(CryptoJS.enc.Utf8);
+export function decrypt(data) {
+  return CryptoJS.AES.decrypt(data, encryptionKey).toString(CryptoJS.enc.Utf8);
 }
