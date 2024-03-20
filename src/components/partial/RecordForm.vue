@@ -33,7 +33,6 @@ async function submitForm() {
 }
 
 watch(() => props.itemData, (newValue) => {
-    console.log('new value --> ' + JSON.stringify(newValue));
     if (newValue) {
         formData.value.username = decrypt(newValue.username) || '';
         formData.value.password = decrypt(newValue.password) || '';
@@ -43,22 +42,22 @@ watch(() => props.itemData, (newValue) => {
         formData.value.timeStamp = newValue.timeStamp || '';
         formData.value.id = newValue.id || 0;
     }
-    console.log('new is Updated -->' + JSON.stringify(newValue));
 });
 
-function clearForm() {
+const clearFormData = () => {
     formData.value = {
         username: '',
         password: '',
         orgType: 'dev',
         orgURL: '',
-        name: ''
+        name: '',
     };
+    console.log('formData.value --> '+JSON.stringify(formData.value));
 }
 
 const cancelForm = () => {
+    clearFormData();
     fireEvent('cancelForm');
-    clearForm();
 }
 
 const fireEvent = (data) => {
@@ -74,7 +73,7 @@ onMounted(() => {
 
 <template>
 
-    <form @submit.prevent="submitForm" class="space-y-4">
+    
         <div class="grid gap-6 mb-6 md:grid-cols-2">
             <div>
                 <label for="username"
@@ -110,7 +109,8 @@ onMounted(() => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
             </div>
             <div class="flex items-center justify-center">
-                <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white text-sm py-2 px-4 rounded-md mr-2">
+                <button @click="submitForm"
+                    class="bg-blue-700 hover:bg-blue-800 text-white text-sm py-2 px-4 rounded-md mr-2">
                     Submit
                 </button>
                 <button @click="cancelForm" class="bg-red-700 hover:bg-red-800 text-white text-sm py-2 px-4 rounded-md">
@@ -119,7 +119,7 @@ onMounted(() => {
             </div>
 
         </div>
-    </form>
+    
 
 </template>
 

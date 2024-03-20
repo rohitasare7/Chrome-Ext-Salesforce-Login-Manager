@@ -3,7 +3,8 @@
   "name": "Salesforce Login Manager",
   "version": "1.0",
   "description": "Login to Salesforce Org easily without opening login page.",
-  "permissions": ["activeTab", "contextMenus", "storage"],
+  "permissions": ["activeTab", "storage", "downloads"],
+  "incognito": "split",
   "action": {
     "default_popup": "index.html"
   }

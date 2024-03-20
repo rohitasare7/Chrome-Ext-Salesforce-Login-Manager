@@ -14,7 +14,6 @@ const searchKey = ref('');
 
 const initData = () => {
     storage.get('recordList', (result) => {
-        //console.log('rec list --> ' + JSON.stringify(result));
         records.value = result.recordList;
     });
 }
@@ -27,9 +26,8 @@ const fetchItemData = (index) => {
 
 const saveToChrome = (itemList) => {
     let result = Array.isArray(itemList);
-    console.log('result 2 --> ' + result);
     storage.set({ recordList: itemList }, () => {
-        console.log('Record list updated successfully');
+        //console.log('Record list updated successfully');
     });
 }
 
@@ -51,34 +49,42 @@ const openTab = (index) => {
     const url = orgURL;
     const username = item.username;
     const pass = item.password;
-
-    //Handle open in tab functionality
-    console.log('Open in tab:', index);
     chrome.tabs.create({
         url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
     });
 };
 
 const openWindow = (index, isIncognito) => {
-    // Handle open in new window functionality
-    console.log('Open in window:', index);
+    //throw error if Incognito is disabled in extension settings
+    if (isIncognito) {
+        chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
+            if (!isAllowedAccess) {
+                alert('please enable Incoginto Access for this extension');
+                return;
+            }
+        });
+    }
+    let item = fetchItemData(index);
+    let orgURL = getOrgURL(item.orgType, item.orgURL);
+    const url = orgURL;
+    const username = item.username;
+    const pass = item.password;
     chrome.windows.create({
-        url: `${chrome.runtime.getURL('login.html')}`,
-        // url: `${chrome.runtime.getURL('login.html')}?a=${ url }&b=${ePassword}&c=${eUsername}`,
+        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
         incognito: isIncognito
     });
 };
 
+// Handle edit functionality
 const editItem = (index) => {
-    // Handle edit functionality
+
     childItemData.value = fetchItemData(index);
-    // childItemData.value.username = decrypt(childItemData.value.username);
-    // childItemData.value.password = decrypt(childItemData.value.password);
-    console.log('child item --> ' + JSON.stringify(childItemData.value));
+    //console.log('child item --> ' + JSON.stringify(childItemData.value));
     isEditing.value = true;
     showForm.value = true;
 };
 
+// Handle delete functionality
 const deleteItem = (id) => {
     const index = records.value.findIndex(item => item.id === id);
     if (index !== -1) {
@@ -101,7 +107,6 @@ const updateRecord = async (id, newData) => {
 
     existingRecords.map(item => {
         if (id == item.id) {
-            console.log('item found --> ' + JSON.stringify(item));
             item.username = encrypt(newData.username);
             item.password = encrypt(newData.password);
             item.orgType = newData.orgType;
@@ -132,10 +137,8 @@ const getLastIndex = (array) => {
 const fetchLastIndex = () => {
     return new Promise((resolve, reject) => {
         storage.get('recordList', (result) => {
-            console.log('result --> ' + JSON.stringify(result));
             if (result.recordList && result.recordList.length > 0) {
                 const idList = result.recordList.map(item => item.id);
-                console.log('idList --> ' + idList);
                 const recordIndex = getLastIndex(idList);
                 resolve(recordIndex);
             } else {
@@ -172,9 +175,9 @@ const saveRecord = async (newData) => {
 const handleEvent = (data) => {
     if (data == 'cancelForm') {
         showForm.value = false;
+        childItemData.value = null;
         return;
     }
-    console.log('event data --> ' + JSON.stringify(data.value));
     if (isEditing.value) {
         updateRecord(data.value.id, data.value);
     }
@@ -197,16 +200,6 @@ onMounted(() => {
     initData();
 });
 
-/* legacy code
-const saveRecordsToChromeOld = (itemList) => {
-    // Convert itemList to an array if it's not already an array
-    const recordArray = Array.isArray(itemList) ? itemList : [itemList];
-    // Store recordList as an array in Chrome storage
-    storage.set({ recordList: recordArray }, () => {
-        console.log('Record list updated successfully');
-    });
-}
-*/
 </script>
 
 <template>
@@ -233,10 +226,10 @@ const saveRecordsToChromeOld = (itemList) => {
         <table class="table-auto w-full border-collapse">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id"
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 mb-4">
-                    <td class="px-4 py-2 min-w-48">{{ item.name }}</td>
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-4 py-1 min-w-48">{{ item.name }}</td>
                     <td class="mr-2">
-                        <div class="flex items-center justify-center my-2">
+                        <div class="flex items-center justify-center my-1">
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
                                 @click="openTab(item.id)">Tab</button>
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
