@@ -1,12 +1,14 @@
 <script setup>
 /*global chrome*/
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, defineEmits } from 'vue';
 import { encrypt, decrypt } from '@/assets/helper';
 
 // note : main storage list : recordList
 const props = defineProps({
     itemData: Object,
 });
+
+const emit = defineEmits(["fireEvent"]);
 
 const formData = ref({
     username: props.itemData.username ? decrypt(props.itemData.username) : '',
@@ -26,13 +28,12 @@ function toggleCustomOrgInput() {
 
 async function submitForm() {
     //Encrypt the sensitive data
-    formData.value.username = encrypt(formData.value.username);
-    formData.value.password = encrypt(formData.value.password);
     formData.value.timeStamp = Date.now();
-
+    fireEvent(formData);
 }
 
 watch(() => props.itemData, (newValue) => {
+    console.log('new value --> ' + JSON.stringify(newValue));
     if (newValue) {
         formData.value.username = decrypt(newValue.username) || '';
         formData.value.password = decrypt(newValue.password) || '';
@@ -43,6 +44,10 @@ watch(() => props.itemData, (newValue) => {
         formData.value.id = newValue.id || 0;
     }
 });
+
+const fireEvent = (data) => {
+    emit('fireEvent', data);
+}
 
 onMounted(() => {
     //Fetch existing data from Chrome storage

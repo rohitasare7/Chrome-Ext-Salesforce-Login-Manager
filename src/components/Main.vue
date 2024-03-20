@@ -5,8 +5,10 @@ import DisplayRecords from '@/components/partial/DisplayRecords';
 
 <template>
 
+    <p>Existing Records</p>
     <DisplayRecords />
     <!-- Create Login Record -->
+    <p class="mt-4">Create new record</p>
     <CreateRecord />
 
 </template>
