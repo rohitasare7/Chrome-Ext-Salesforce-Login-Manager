@@ -70,13 +70,19 @@ const openWindow = (index, isIncognito) => {
 };
 
 const deleteItem = (id) => {
-    // Handle edit functionality
+    // Find the index of the item to delete
     const index = records.value.findIndex(item => item.id === id);
     if (index !== -1) {
-        records.value.splice(index, 1);
-        storage.set({ recordList: records.value }, () => {
+        // Create a copy of the records array
+        const updatedRecords = [...records.value];
+        // Remove the item from the copy of the array
+        updatedRecords.splice(index, 1);
+        // Save the updated array back to Chrome storage
+        storage.set({ recordList: updatedRecords }, () => {
             console.log('Item deleted successfully');
         });
+        // Update the records ref with the updated array
+        records.value = updatedRecords;
     } else {
         console.error('Item not found');
     }
