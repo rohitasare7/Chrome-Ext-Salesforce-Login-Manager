@@ -8,7 +8,9 @@ import { decrypt, encrypt } from '@/assets/helper';
 let records = ref([]);
 let storage = chrome.storage.sync;
 let isEditing = ref(false);
+let showForm = ref(false);
 let childItemData = ref(null);
+const searchKey = ref('');
 
 const initData = () => {
     storage.get('recordList', (result) => {
@@ -53,7 +55,6 @@ const openTab = (index) => {
     //Handle open in tab functionality
     console.log('Open in tab:', index);
     chrome.tabs.create({
-        //url: `${chrome.runtime.getURL('login.html')}`,
         url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
     });
 };
@@ -75,6 +76,7 @@ const editItem = (index) => {
     // childItemData.value.password = decrypt(childItemData.value.password);
     console.log('child item --> ' + JSON.stringify(childItemData.value));
     isEditing.value = true;
+    showForm.value = true;
 };
 
 const deleteItem = (id) => {
@@ -111,11 +113,74 @@ const updateRecord = async (id, newData) => {
     saveToChrome(existingRecords);
     records.value = existingRecords;
     isEditing.value = false;
+    showForm.value = false;
+}
+
+const getLastIndex = (array) => {
+    if (array.length === 0) {
+        return 1; // Return 1 if the array is empty
+    }
+    let maxNumber = array[0]; // Initialize maxNumber with the first element of the array
+    for (let i = 1; i < array.length; i++) {
+        if (array[i] > maxNumber) {
+            maxNumber = array[i]; // Update maxNumber if a larger number is found
+        }
+    }
+    return maxNumber;
+};
+
+const fetchLastIndex = () => {
+    return new Promise((resolve, reject) => {
+        storage.get('recordList', (result) => {
+            console.log('result --> ' + JSON.stringify(result));
+            if (result.recordList && result.recordList.length > 0) {
+                const idList = result.recordList.map(item => item.id);
+                console.log('idList --> ' + idList);
+                const recordIndex = getLastIndex(idList);
+                resolve(recordIndex);
+            } else {
+                resolve(0); // If no records found, return 0
+            }
+        });
+    });
+};
+
+const saveRecord = async (newData) => {
+    const existingRecords = await new Promise((resolve, reject) => {
+        storage.get('recordList', (result) => {
+            const existingRecords = result.recordList || [];
+            resolve(existingRecords);
+        });
+    });
+    let item = {};
+    let indexId = await fetchLastIndex();
+    item.id = indexId + 1;
+    item.username = encrypt(newData.username);
+    item.password = encrypt(newData.password);
+    item.orgType = newData.orgType;
+    item.orgURL = newData.orgURL;
+    item.name = newData.name;
+    item.timeStamp = Date.now();
+
+    existingRecords.push(item);
+    saveToChrome(existingRecords);
+    records.value = existingRecords;
+    isEditing.value = false;
+    showForm.value = false;
 }
 
 const handleEvent = (data) => {
+    if (data == 'cancelForm') {
+        showForm.value = false;
+        return;
+    }
     console.log('event data --> ' + JSON.stringify(data.value));
-    updateRecord(data.value.id, data.value);
+    if (isEditing.value) {
+        updateRecord(data.value.id, data.value);
+    }
+    else {
+        saveRecord(data.value);
+    }
 }
 
 // Init
@@ -138,7 +203,25 @@ const saveRecordsToChromeOld = (itemList) => {
 
 <template>
 
-    <div class="container mx-auto mb-4">
+    <div class="flex mb-4">
+        <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."
+            class="max-w-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none mr-4">
+
+        <button @click="showForm = true"
+            class="flex items-center py-2 px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
+            <span class="material-symbols-rounded">add</span>
+            <span class="ml-1">Add Org </span>
+        </button>
+
+        <button @click="showForm = true"
+            class="flex items-center py-2 px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+            <span class="material-symbols-rounded">upload</span>
+            <span class="ml-1">Export </span>
+        </button>
+    </div>
+    <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
+
+    <div v-if="!showForm" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse">
             <tbody>
                 <tr v-for="(item) in records" :key="item.id" class="border">
@@ -170,8 +253,6 @@ const saveRecordsToChromeOld = (itemList) => {
         </table>
     </div>
 
-
-    <RecordForm v-if="isEditing" :itemData="childItemData" @fireEvent="handleEvent" />
 
 </template>
 

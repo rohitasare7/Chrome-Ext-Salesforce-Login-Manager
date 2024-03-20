@@ -11,13 +11,13 @@ const props = defineProps({
 const emit = defineEmits(["fireEvent"]);
 
 const formData = ref({
-    username: props.itemData.username ? decrypt(props.itemData.username) : '',
-    password: props.itemData.password ? decrypt(props.itemData.password) : '',
-    orgType: props.itemData.orgType ?? 'dev',
-    orgURL: props.itemData.orgURL ?? '',
-    name: props.itemData.name ?? '',
-    timeStamp: props.itemData.timeStamp ?? '',
-    id: props.itemData.id ?? 0,
+    username: props.itemData?.username ? decrypt(props.itemData.username) : '',
+    password: props.itemData?.password ? decrypt(props.itemData.password) : '',
+    orgType: props.itemData?.orgType ?? 'dev',
+    orgURL: props.itemData?.orgURL ?? '',
+    name: props.itemData?.name ?? '',
+    timeStamp: props.itemData?.timeStamp ?? '',
+    id: props.itemData?.id ?? 0,
 });
 
 function toggleCustomOrgInput() {
@@ -43,7 +43,23 @@ watch(() => props.itemData, (newValue) => {
         formData.value.timeStamp = newValue.timeStamp || '';
         formData.value.id = newValue.id || 0;
     }
+    console.log('new is Updated -->' + JSON.stringify(newValue));
 });
+
+function clearForm() {
+    formData.value = {
+        username: '',
+        password: '',
+        orgType: 'dev',
+        orgURL: '',
+        name: ''
+    };
+}
+
+const cancelForm = () => {
+    fireEvent('cancelForm');
+    clearForm();
+}
 
 const fireEvent = (data) => {
     emit('fireEvent', data);
@@ -93,17 +109,17 @@ onMounted(() => {
                 <input type="text" id="name" v-model="formData.name" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
             </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded">
-                Submit
-            </button>
+            <div class="flex items-center justify-center">
+                <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white text-sm py-2 px-4 rounded mr-2">
+                    Submit
+                </button>
+                <button @click="cancelForm" class="bg-red-700 hover:bg-red-800 text-white text-sm py-2 px-4 rounded">
+                    Cancel
+                </button>
+            </div>
+
         </div>
     </form>
-
-    <button @click="fetchData"
-        class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded inline-block mt-4 ml-2">
-        Fetch
-    </button>
-
 
 </template>
 

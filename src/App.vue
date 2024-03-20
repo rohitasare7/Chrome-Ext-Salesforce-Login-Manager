@@ -20,11 +20,6 @@ export default {
 </script>
 
 <style>
-#app {
-  margin-top: 60px;
-  font-family: "Figtree", sans-serif;
-}
-
 body {
     font-family: "Figtree", sans-serif;
 }
