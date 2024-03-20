@@ -1,34 +1,26 @@
 <script setup>
 /*global chrome*/
 import { ref, onMounted } from 'vue';
+import RecordForm from '@/components/partial/RecordForm';
 
 // note : main storage list : recordList
-const encryptionKey = 'salesForceManager19032024';
 let records = ref([]);
 let storage = chrome.storage.sync;
+let isEditing = ref(false);
+let childItemData = ref(null);
 
-const fetchData = () => {
+const initData = () => {
     storage.get('recordList', (result) => {
-        console.log('rec list --> ' + JSON.stringify(result));
+        //console.log('rec list --> ' + JSON.stringify(result));
         records.value = result.recordList;
     });
 }
-
-onMounted(() => {
-    //Fetch existing data from Chrome storage
-    fetchData();
-});
 
 const fetchItemData = (index) => {
     let item = null;
     item = records.value.find(item => item.id === index);
     return item;
 }
-
-const editItem = (index) => {
-    // Handle edit functionality
-    console.log('Edit item:', index);
-};
 
 const getOrgURL = (orgType, orgUrl) => {
     if (orgType === 'dev') {
@@ -69,6 +61,14 @@ const openWindow = (index, isIncognito) => {
     });
 };
 
+const editItem = (index) => {
+    isEditing.value = false;
+    // Handle edit functionality
+    childItemData.value = fetchItemData(index);
+    console.log('child item --> '+JSON.stringify(childItemData.value));
+    isEditing.value = true;
+};
+
 const deleteItem = (id) => {
     // Find the index of the item to delete
     const index = records.value.findIndex(item => item.id === id);
@@ -87,6 +87,12 @@ const deleteItem = (id) => {
         console.error('Item not found');
     }
 };
+
+// Init
+onMounted(() => {
+    //Fetch existing data from Chrome storage
+    initData();
+});
 
 </script>
 
@@ -125,6 +131,8 @@ const deleteItem = (id) => {
             </table>
         </div>
     </div>
+
+    <RecordForm v-if="isEditing" :itemData="childItemData" />
 
 </template>
 
