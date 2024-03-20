@@ -1,6 +1,6 @@
 <script setup>
 /*global chrome*/
-import { ref, onMounted } from 'vue';
+import { ref, onMounted , computed } from 'vue';
 import RecordForm from '@/components/partial/RecordForm';
 import { decrypt, encrypt } from '@/assets/helper';
 
@@ -183,6 +183,14 @@ const handleEvent = (data) => {
     }
 }
 
+const filteredRecords = computed(() => {
+  const search = searchKey.value.toLowerCase();
+  if (!search) {
+    return records.value; // Return all records if search key is empty
+  }
+  return records.value.filter(record => record.name.toLowerCase().includes(search));
+});
+
 // Init
 onMounted(() => {
     //Fetch existing data from Chrome storage
@@ -224,7 +232,7 @@ const saveRecordsToChromeOld = (itemList) => {
     <div v-if="!showForm" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse">
             <tbody>
-                <tr v-for="(item) in records" :key="item.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr v-for="(item) in filteredRecords" :key="item.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-4 py-2">{{ item.name }}</td>
                     <td class="px-4 py-2">
                         <button @click="editItem(item.id)" class="text-blue-500">
