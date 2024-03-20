@@ -205,16 +205,16 @@ const saveRecordsToChromeOld = (itemList) => {
 
     <div class="flex mb-4">
         <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."
-            class="max-w-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none mr-4">
+            class="max-w-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
         <button @click="showForm = true"
-            class="flex items-center py-2 px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
+            class="flex items-center py-[1.5] px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
             <span class="material-symbols-rounded">add</span>
             <span class="ml-1">Add Org </span>
         </button>
 
         <button @click="showForm = true"
-            class="flex items-center py-2 px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+            class="flex items-center py-[1.5] px-4 text-white bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
             <span class="material-symbols-rounded">upload</span>
             <span class="ml-1">Export </span>
         </button>
@@ -224,7 +224,7 @@ const saveRecordsToChromeOld = (itemList) => {
     <div v-if="!showForm" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse">
             <tbody>
-                <tr v-for="(item) in records" :key="item.id" class="border">
+                <tr v-for="(item) in records" :key="item.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-4 py-2">{{ item.name }}</td>
                     <td class="px-4 py-2">
                         <button @click="editItem(item.id)" class="text-blue-500">
