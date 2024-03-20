@@ -1,6 +1,6 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <div class="p-5 bg-white dark:bg-gray-900 antialiased" style="max-width: 600px; min-width: 400px;">
+  <div class="p-5 bg-white dark:bg-gray-900 antialiased" style="max-width: 700px; min-width: 600px;">
     <Main />
   </div>
   
