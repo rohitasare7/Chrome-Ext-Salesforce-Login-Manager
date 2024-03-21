@@ -281,7 +281,7 @@ export default {
     transition: background-color 0.3s;
 }
 
-#mainTable tbody > tr:last-child {
-  border-bottom: 0;
+#mainTable tbody>tr:last-child {
+    border-bottom: 0;
 }
 </style>
