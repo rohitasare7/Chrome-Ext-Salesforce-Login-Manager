@@ -174,15 +174,17 @@ const saveRecord = async (newData) => {
 
 const handleEvent = (data) => {
     if (data == 'cancelForm') {
-        showForm.value = false;
         childItemData.value = null;
+        showForm.value = false;
         return;
     }
     if (isEditing.value) {
         updateRecord(data.value.id, data.value);
+        childItemData.value = null;
     }
     else {
         saveRecord(data.value);
+        childItemData.value = null;
     }
 }
 
@@ -223,7 +225,7 @@ onMounted(() => {
     <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
 
     <div v-if="!showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
-        <table class="table-auto w-full border-collapse">
+        <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -277,5 +279,9 @@ export default {
 
 .iconBtn:hover {
     transition: background-color 0.3s;
+}
+
+#mainTable tbody > tr:last-child {
+  border-bottom: 0;
 }
 </style>
