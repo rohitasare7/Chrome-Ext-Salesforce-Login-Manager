@@ -258,6 +258,7 @@ const saveImportedRecords = async (itemList) => {
     saveToChrome(updatedRecords);
     // Update the records.value with the updated records
     records.value = updatedRecords;
+    showSettings.value = !showSettings.value;
 };
 
 const importFile = ref(null);
@@ -287,8 +288,8 @@ onMounted(() => {
             <span class="ml-1">Add Org </span>
         </button>
         <button @click="showSettings = !showSettings"
-            class="flex items-end text-gray-700 mr-2 bg-blue-100 hover:text-gray-800 hover:bg-blue-200 rounded-full settingIcon transition-colors duration-300 mr-2">
-            <span class="material-symbols-rounded">settings</span>
+            class="flex items-end text-gray-700 border bg-slate-100 hover:bg-gray-700 hover:text-white hover:border-border-gray-700 rounded-full settingIcon transition-colors duration-300 mr-2">
+            <span class="material-symbols-rounded">article_shortcut</span>
             <!-- <span class="ml-1">Settings</span> -->
         </button>
 
@@ -300,8 +301,8 @@ onMounted(() => {
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id"
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-4 py-1 min-w-48">{{ item.name }}</td>
+                    class="border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="text-sm px-4 py-1 min-w-48">{{ item.name }}</td>
                     <td class="mr-2">
                         <div class="flex items-center justify-center my-1">
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
@@ -311,13 +312,13 @@ onMounted(() => {
                             <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md mr-2"
                                 @click="openWindow(item.id, true)">Incognito</button>
                             <button @click="editItem(item.id)"
-                                class="text-blue-500 mr-2 bg-blue-200 hover:text-blue-700 hover:bg-blue-300 rounded-full iconBtn transition-colors duration-300 mr-2">
+                                class="text-blue-700 border bg-slate-100 hover:bg-blue-700 hover:text-white hover:border-blue-700 rounded-full iconBtn transition-colors duration-300 mr-2">
                                 <span class="material-symbols-rounded">
                                     edit_square
                                 </span>
                             </button>
                             <button @click="deleteItem(item.id)"
-                                class="text-rose-600 bg-rose-200 hover:text-rose-700 hover:bg-rose-300 rounded-full iconBtn transition-colors duration-300">
+                                class="text-rose-600 border bg-slate-100 hover:bg-rose-700 hover:text-white hover:border-rose-700 rounded-full iconBtn transition-colors duration-300">
                                 <span class="material-symbols-rounded">
                                     delete
                                 </span>
@@ -335,7 +336,8 @@ onMounted(() => {
     </div>
 
 
-    <div v-if="showSettings && !showForm" class="flex items-center justify-center">
+    <div v-if="showSettings && !showForm" class="flex items-center justify-center mt-8">
+        <h3 class="text-3xl font-bold dark:text-white text-blue-950">Import or Export your credentials.</h3>
         <button @click="exportRecords"
             class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
             <span class="material-symbols-rounded">upload</span>
@@ -349,6 +351,11 @@ onMounted(() => {
         </button>
         <input type="file" id="importFile" ref="importFile" @change="handleFileChange" class="hidden">
         <!-- <input type="file" id="importFile" ref="importFile" @change="handleFileChange" class="hidden"> -->
+        <button @click="showSettings = !showSettings"
+            class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+            <span class="material-symbols-rounded">reply</span>
+            <span class="ml-1">Back</span>
+        </button>
     </div>
 
 </template>
@@ -361,17 +368,18 @@ export default {
 
 <style scoped>
 .iconBtn {
-    padding: 7px 8px;
+    padding: 5px 6px;
     margin: 5px 4px;
     line-height: 12px;
 }
 
-.iconBtn:hover {
-    transition: background-color 0.3s;
+.iconBtn:hover,
+.settingIcon:hover {
+    transition: all ease-out .3s;
 }
 
 .settingIcon {
-    padding: 5px;
+    padding: 7px;
     line-height: 12px;
 }
 
