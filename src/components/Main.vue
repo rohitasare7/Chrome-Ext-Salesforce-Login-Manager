@@ -1,15 +1,10 @@
 <script setup>
-import CreateRecord from '@/components/partial/CreateRecord';
 import DisplayRecords from '@/components/partial/DisplayRecords';
 </script>
 
 <template>
-
+    <!-- Init Main Page -->
     <DisplayRecords />
-    <!-- Create Login Record -->
-    <!-- <p class="mt-4">Create new record</p>
-    <CreateRecord /> -->
-
 </template>
 
 <script>
