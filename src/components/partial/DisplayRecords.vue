@@ -296,7 +296,7 @@ onMounted(() => {
 
     <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
 
-    <div v-if="!showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
+    <div v-if="!showSettings && !showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id"
@@ -329,7 +329,7 @@ onMounted(() => {
         </table>
     </div>
 
-    <div v-else-if="filteredRecords.length == 0 && searchKey == ''">
+    <div v-else-if="!showSettings && filteredRecords.length == 0 && searchKey == ''">
         <p class="my-6 text-base font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Please click
             "Add Org" button to create a record.</p>
     </div>
