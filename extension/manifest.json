@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Salesforce Login Manager",
-  "version": "1.0",
-  "description": "Login to Salesforce Org with a single click using this extension, effortlessly granting users instant access.",
-  "permissions": ["activeTab", "storage", "downloads"],
+  "author": "Rohitkumar Asare",
+  "version": "1.0.1",
+  "description": "Login to Salesforce Org with a single click using this Chrome Extension, effortlessly granting users instant access.",
+  "permissions": ["storage", "downloads"],
   "incognito": "split",
   "action": {
     "default_popup": "index.html"

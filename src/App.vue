@@ -1,13 +1,10 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <div class="p-5 dark:bg-gray-900 antialiased" style="max-width: 700px; min-width: 600px;">
     <Main />
   </div>
-  
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
 import Main from './components/Main.vue'
 import './assets/index.css';
 
@@ -21,8 +18,6 @@ export default {
 
 <style>
 body {
-    font-family: "Figtree", sans-serif;
-    background: #fcfcfc;
+  font-family: "Figtree", sans-serif;
 }
-
 </style>
