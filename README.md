@@ -11,7 +11,9 @@ npm install
 npm run build
 ```
 
-Open chrome extensions tabe, click Load Unpacked and select the **dist** folder and you should see the extension loaded, after new build you can just simply hit reload button. 
+Open chrome extensions tab, click Load Unpacked (make sure developer mode is on) and select the **dist** folder and you should see the extension loaded, after new build you can just simply hit reload button. 
+
+Main logic details will be updated on [Doc Page](https://rohitasare7.github.io/Chrome-Ext-Salesforce-Login-Manager/) soon.
 
 Notes : 
 
