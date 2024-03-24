@@ -1,5 +1,5 @@
 # Salesforce Login Manager
-Link : [Chrome Extension Page]([https://www.google.com](https://chromewebstore.google.com/detail/salesforce-login-manager/beemdmmeeddbifmjlaiboldgnffddibd))
+Link : [Chrome Extension Page](https://chromewebstore.google.com/detail/salesforce-login-manager/beemdmmeeddbifmjlaiboldgnffddibd)
 
 ## Project setup
 ```
