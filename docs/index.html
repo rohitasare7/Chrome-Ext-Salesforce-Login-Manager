@@ -1,20 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentation</title>
-    <meta name="google-site-verification" content="9XWLht9RV-TDb45WpLWkFmz7TTPg6AfaOdOXWqofwAo" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
-<body>
-    <p>This is a documentation page, I need to work on UI and detailed documentation part but for now lets have some basics.</p>
-    <p>initial commands to setup the project (assuming you have nodejs installed)</p>
-    <p>npm install</p>
-    <p>composer update</p>
-    <br>
-    <p>to build the final chrome extension package that will be stored in dist folder : </p>
-    <p>npm run build</p>
-    <br>
-    <p>Whatever components you will be storing in extension folder will be copied to dist folder via copy-manifest.js file</p>
+
+<body class="font-sans antialiased">
+    <header class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4 flex items-center justify-center">
+            <h1 class="text-2xl font-semibold">Salesforce Login Manager Documentation</h1>
+        </div>
+    </header>
+    <div class="flex flex-col lg:flex-row">
+        <!-- Left Sidebar -->
+        <div class="bg-gray-200 lg:w-1/5 overflow-y-auto">
+            <nav class="px-8 py-6 ml-4">
+                <ul class="list-decimal">
+                    <li class="hover:underline underline-offset-4"><a href="#installation">Installation</a></li>
+                    <li class="hover:underline underline-offset-4"><a href="#security">Security Details</a></li>
+                    <li class="hover:underline underline-offset-4"><a href="#installation">Installation</a>
+                    </li>
+                    <!-- Add more sidebar items as needed -->
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="lg:flex-grow lg:w-4/5 bg-gray-50 p-8">
+            <!-- Installation -->
+            <section id="installation" class="mb-8">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Installation & Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Card Component -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <p class="mb-4">Clone the git <a class="text-blue-700 font-semibold"
+                                href="https://github.com/rohitasare7/Chrome-Ext-Salesforce-Login-Manager"
+                                target="_blank">repository</a></p>
+                        <p class="mb-4">Run below commands to install dependencies.</p>
+                        <pre class="bg-gray-100 p-2 rounded-md mb-2"><code>npm install</code></pre>
+                        <pre class="bg-gray-100 p-2 rounded-md"><code>composer update</code></pre>
+                        <p class="my-4">After making changes or to build production files run below command.</p>
+                        <pre class="bg-gray-100 p-2 rounded-md"><code>npm run build</code></pre>
+                        <p class="my-4">You will be able to see the <b>dist</b> folder with required files.</p>
+                        <p class="my-4">Whatever fils are present in <b>extension</b> folder will be copied to <b>dist</b> folder.</p>
+                        <p class="my-4">main extension logic is written in <b>src</b> and <b>extension</b> folders.</p>
+                        <p class="my-4">To install this local extension, open chrome extensions tab, click Load Unpacked (make sure developer mode is on) and select the <b>dist</b> folder and you should see the extension loaded, after new build you can just simply hit reload button.</p>
+                        <!-- <h3 class="text-lg text-gray-700 font-semibold mb-2 bg-gray-100 p-2 rounded-md"></h3>
+
+                        <h3 class="text-lg text-gray-700 font-semibold mb-2 bg-gray-100 p-2 rounded-md"></h3> -->
+                    </div>
+                    <!-- Add more card components as needed -->
+                </div>
+            </section>
+            <!-- security -->
+            <section id="security" class="mb-8">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Security Details</h2>
+                <div class="grid">
+                    <!-- Card Component -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <!-- <h3 class="text-lg  text-gray-700 font-semibold mb-2">Component 1</h3> -->
+                        <p class="mb-4">
+                            In essence, the extension operates on a simple yet highly secure principle: your login
+                            credentials are securely stored within your Chrome browser's local storage. When you
+                            initiate the login process, such as logging in via New Tab, the extension efficiently
+                            decrypts your credentials and submits them to the Salesforce login form using JavaScript.
+                            This streamlined approach not only ensures the confidentiality of your data but also
+                            provides you with peace of mind knowing that your credentials are protected against any
+                            potential external threats.
+                        </p>
+                        <p class="mb-4">
+                            Rest assured that this Chrome extension prioritizes the security and safety of your data.
+                            Utilizing robust <b>AES encryption</b> provided by CryptoJS, your sensitive information is
+                            shielded. Even when stored in your local Chrome storage, your data remains encrypted,
+                            safeguarding it from anyone else.
+                        </p>
+                        <p class="mb-4">
+                            When you log into your Salesforce Development environment using our extension, the
+                            decryption process is seamlessly integrated, ensuring that your credentials are never
+                            exposed in plaintext. This means that even during the login process, if you were to inspect
+                            the URL, you would find your username and password still securely encrypted.
+                        </p>
+                        <p class="mb-4">
+                           Also this extension has passed all chrome extension development checks as after review only any extension gets published to official chrome web store.
+                        </p>
+                    </div>
+                    <!-- Add more card components as needed -->
+                </div>
+            </section>
+
+            <!-- Installation Guidelines -->
+            <section id="installation" class="mb-8">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Install Extension from Chrome Web Store</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <!-- <h3 class="text-lg font-semibold mb-2">Step 1: Install Tailwind CSS</h3>
+                    <p>Use npm or yarn to install Tailwind CSS:</p>
+                    <pre class="bg-gray-100 p-2 rounded-md"><code>npm install tailwindcss</code></pre> -->
+                    <p class="">You can install it from Official Chrome Web Store Page : <a
+                            href="https://chromewebstore.google.com/detail/salesforce-login-manager/beemdmmeeddbifmjlaiboldgnffddibd"
+                            class="text-blue-700 font-semibold" target="_blank">Salesforce Login Manager</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Installation Guidelines -->
+            <section id="issues">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Report any Issues or Bugs</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <!-- <h3 class="text-lg font-semibold mb-2">Step 1: Install Tailwind CSS</h3>
+                    <p>Use npm or yarn to install Tailwind CSS:</p>
+                    <pre class="bg-gray-100 p-2 rounded-md"><code>npm install tailwindcss</code></pre> -->
+                    <p class="">You can report any issues or bugs on the : <a
+                            href="https://github.com/rohitasare7/Chrome-Ext-Salesforce-Login-Manager/issues"
+                            class="text-blue-700 font-semibold" target="_blank">github issues page </a>
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
 </body>
+
 </html>
