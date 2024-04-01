@@ -4,7 +4,17 @@
   "author": "Rohitkumar Asare",
   "version": "1.0.1",
   "description": "Login to Salesforce Org with a single click using this Chrome Extension, effortlessly granting users instant access.",
-  "permissions": ["storage", "downloads"],
+  "permissions": ["storage", "downloads","activeTab","tabs"],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["js/content-script.js"],
+      "run_at": "document_end"
+    }
+  ],
   "incognito": "split",
   "action": {
     "default_popup": "index.html"

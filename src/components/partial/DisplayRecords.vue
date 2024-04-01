@@ -59,7 +59,7 @@ const openTab = (index) => {
     const username = item.username;
     const pass = item.password;
     chrome.tabs.create({
-        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
+        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}&index=${index}`,
     });
 };
 
@@ -120,6 +120,7 @@ const updateRecord = async (id, newData) => {
             item.orgType = newData.orgType;
             item.orgURL = newData.orgURL;
             item.name = newData.name;
+            item.faviconColor = newData.faviconColor;
             item.timeStamp = Date.now();
         }
     });
@@ -171,6 +172,7 @@ const saveRecord = async (newData) => {
     item.orgType = newData.orgType;
     item.orgURL = newData.orgURL;
     item.name = newData.name;
+    item.faviconColor = newData.faviconColor;
     item.timeStamp = Date.now();
 
     existingRecords.push(item);
@@ -267,6 +269,19 @@ const openFileDialog = () => {
     importFile.value.click();
 }
 
+const callFaviconMethod = () => {
+// Send a message to the content script to update the favicon color
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  const activeTab = tabs[0];
+  console.log('activeTab --> '+JSON.stringify(activeTab));
+  chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
+  console.log('inside callFaviconMethod');
+});
+
+
+}
+
+
 // Init
 onMounted(() => {
     //Fetch existing data from Chrome storage
@@ -276,6 +291,8 @@ onMounted(() => {
 </script>
 
 <template>
+
+<button @click="callFaviconMethod" class="my-4 flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">Change Favicon Color</button>
 
     <div class="flex mb-4" v-if="!showForm">
 

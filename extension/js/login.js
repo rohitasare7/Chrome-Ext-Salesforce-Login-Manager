@@ -1,5 +1,6 @@
 //Get Username, Password, URL From Login.html url
 //import { decrypt } from "/js/crypto.js";
+/*global chrome*/
 
 function getParams() {
   const params = {};
@@ -27,13 +28,26 @@ function decryptItem(data) {
   return CryptoJS.AES.decrypt(data, encryptionKey).toString(CryptoJS.enc.Utf8);
 }
 
-//submit the form
+// Function to pass the record ID to the background script
+function passRecordId(recId) {
+  chrome.runtime.sendMessage({ type: 'passRecId', recId: recId });
+}
+
+// Submit the form and pass the item ID
 document.onreadystatechange = function () {
-  const item = getParams();
-  const form = document.querySelector("form");
-  form.action = item.url;
-  //document.getElementById("username").value = decrypt(item.un); decrypt(item.pw);
-  document.getElementById("username").value = decryptItem(item.un);
-  document.getElementById("password").value = decryptItem(item.pw);
-  form.submit(); //let the magic happen
+  if (document.readyState === 'complete') {
+    console.log('document --> ' + JSON.stringify(document));
+    // Pass the record ID after submitting the form
+    
+    const item = getParams();
+    //alert('item -> '+JSON.stringify(item));
+    const form = document.querySelector("form");
+    form.action = item.url;
+    document.getElementById("username").value = decryptItem(item.un);
+    document.getElementById("password").value = decryptItem(item.pw);
+    form.submit();
+    //const recId = '11111111'; // Example record ID, replace it with your actual logic to get the record ID
+    passRecordId(item.index);
+
+  }
 };
