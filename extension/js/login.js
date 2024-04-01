@@ -36,8 +36,6 @@ function passRecordId(recId) {
 // Submit the form and pass the item ID
 document.onreadystatechange = function () {
   if (document.readyState === 'complete') {
-    console.log('document --> ' + JSON.stringify(document));
-    // Pass the record ID after submitting the form
     
     const item = getParams();
     //alert('item -> '+JSON.stringify(item));
@@ -46,8 +44,7 @@ document.onreadystatechange = function () {
     document.getElementById("username").value = decryptItem(item.un);
     document.getElementById("password").value = decryptItem(item.pw);
     form.submit();
-    //const recId = '11111111'; // Example record ID, replace it with your actual logic to get the record ID
+    // Pass the current login record ID after submitting the form
     passRecordId(item.index);
-
   }
 };

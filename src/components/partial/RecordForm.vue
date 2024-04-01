@@ -18,7 +18,8 @@ const formData = ref({
     name: props.itemData?.name ?? '',
     timeStamp: props.itemData?.timeStamp ?? '',
     id: props.itemData?.id ?? 0,
-    faviconColor : '',
+    faviconColor : props.itemData?.faviconColor ?? null,
+    orgIdentifier : props.itemData?.orgIdentifier ?? null,
 });
 
 const showPassword = ref(false);
@@ -67,7 +68,6 @@ const cancelForm = () => {
 }
 
 const fireEvent = (data) => {
-    console.log('faviconColor -->'+data.faviconColor);
     emit('fireEvent', data);
 }
 
