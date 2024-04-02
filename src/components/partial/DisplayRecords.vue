@@ -59,7 +59,7 @@ const openTab = (index) => {
     const username = item.username;
     const pass = item.password;
     chrome.tabs.create({
-        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
+        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}&index=${index}`,
     });
 };
 
@@ -120,6 +120,7 @@ const updateRecord = async (id, newData) => {
             item.orgType = newData.orgType;
             item.orgURL = newData.orgURL;
             item.name = newData.name;
+            item.faviconColor = newData.faviconColor;
             item.timeStamp = Date.now();
         }
     });
@@ -171,6 +172,7 @@ const saveRecord = async (newData) => {
     item.orgType = newData.orgType;
     item.orgURL = newData.orgURL;
     item.name = newData.name;
+    item.faviconColor = newData.faviconColor;
     item.timeStamp = Date.now();
 
     existingRecords.push(item);
@@ -188,11 +190,25 @@ const handleEvent = (data) => {
     }
     if (isEditing.value) {
         updateRecord(data.value.id, data.value);
-        childItemData.value = null;
+        //console.log('updateRecord --> ' + JSON.stringify(data.value));
+        //childItemData.value = null;
+        resetChildData();
     }
     else {
         saveRecord(data.value);
         childItemData.value = null;
+    }
+}
+
+const resetChildData = () => {
+    for (const key in childItemData.value) {
+        if (Object.hasOwnProperty.call(childItemData.value, key)) {
+            if (key === 'faviconColor') {
+                childItemData.value[key] = "#0d9dda";
+            } else {
+                childItemData.value[key] = null;
+            }
+        }
     }
 }
 
@@ -266,6 +282,19 @@ const importFile = ref(null);
 const openFileDialog = () => {
     importFile.value.click();
 }
+
+const callFaviconMethod = () => {
+    // Send a message to the content script to update the favicon color
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        console.log('activeTab --> ' + JSON.stringify(activeTab));
+        chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
+        console.log('inside callFaviconMethod');
+    });
+
+
+}
+
 
 // Init
 onMounted(() => {

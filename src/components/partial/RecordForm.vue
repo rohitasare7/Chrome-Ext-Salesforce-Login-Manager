@@ -18,6 +18,8 @@ const formData = ref({
     name: props.itemData?.name ?? '',
     timeStamp: props.itemData?.timeStamp ?? '',
     id: props.itemData?.id ?? 0,
+    faviconColor: props.itemData?.faviconColor ?? '#0d9dda',
+    orgIdentifier: props.itemData?.orgIdentifier ?? null,
 });
 
 const showPassword = ref(false);
@@ -56,7 +58,9 @@ const clearFormData = () => {
         orgType: 'dev',
         orgURL: '',
         name: '',
+        faviconColor: '#0d9dda',
     };
+
     //console.log('formData.value --> ' + JSON.stringify(formData.value));
 }
 
@@ -66,6 +70,9 @@ const cancelForm = () => {
 }
 
 const fireEvent = (data) => {
+    if(data.value?.faviconColor === "#0d9dda"){
+        data.value.faviconColor = null;
+    }
     emit('fireEvent', data);
 }
 
@@ -82,15 +89,14 @@ watch(() => props.itemData, (newValue) => {
     }
 });
 
-onMounted(() => {
-    //Fetch existing data from Chrome storage
-    //fetchData();
-});
-
 const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
 };
 
+// onMounted(() => {
+//     //Fetch existing data from Chrome storage
+//     //fetchData();
+// });
 </script>
 
 <template>
@@ -154,6 +160,13 @@ const togglePasswordVisibility = () => {
                 <input type="text" id="name" v-model="formData.name" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
             </div>
+            <div>
+                <label for="faviconColor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Favicon
+                    Color :</label>
+                <input type="color" id="faviconColor" v-model="formData.faviconColor"
+                    class="h-12 w-12 block rounded-sm disabled:opacity-50 disabled:pointer-events-none appearance-none bg-transparent border-none cursor-pointer"
+                    value="#0d9dda" title="Choose your favicon color">
+            </div>
             <div class="flex items-center justify-center">
                 <button type="submit"
                     class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-md mr-2">
@@ -176,3 +189,19 @@ export default {
     name: 'RecordFormComp',
 }
 </script>
+
+<style scoped>
+#faviconColor {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#faviconColor::-webkit-color-swatch {
+    border-radius: 8px;
+    border: none;
+}
+</style>
