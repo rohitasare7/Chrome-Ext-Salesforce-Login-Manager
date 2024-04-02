@@ -70,6 +70,9 @@ const cancelForm = () => {
 }
 
 const fireEvent = (data) => {
+    if(data.value?.faviconColor === "#0d9dda"){
+        data.value.faviconColor = null;
+    }
     emit('fireEvent', data);
 }
 
@@ -86,15 +89,14 @@ watch(() => props.itemData, (newValue) => {
     }
 });
 
-onMounted(() => {
-    //Fetch existing data from Chrome storage
-    //fetchData();
-});
-
 const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
 };
 
+// onMounted(() => {
+//     //Fetch existing data from Chrome storage
+//     //fetchData();
+// });
 </script>
 
 <template>
@@ -162,10 +164,8 @@ const togglePasswordVisibility = () => {
                 <label for="faviconColor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Favicon
                     Color :</label>
                 <input type="color" id="faviconColor" v-model="formData.faviconColor"
-                    class="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700"
-                    value="#2563eb" title="Choose your color">
-                <!-- <input type="color" class="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700" id="hs-color-input" value="#2563eb" title="Choose your color"> -->
-
+                    class="h-12 w-12 block rounded-sm disabled:opacity-50 disabled:pointer-events-none appearance-none bg-transparent border-none cursor-pointer"
+                    value="#0d9dda" title="Choose your favicon color">
             </div>
             <div class="flex items-center justify-center">
                 <button type="submit"
@@ -189,3 +189,19 @@ export default {
     name: 'RecordFormComp',
 }
 </script>
+
+<style scoped>
+#faviconColor {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#faviconColor::-webkit-color-swatch {
+    border-radius: 8px;
+    border: none;
+}
+</style>

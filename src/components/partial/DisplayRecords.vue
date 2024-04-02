@@ -306,10 +306,6 @@ onMounted(() => {
 
 <template>
 
-    <button @click="callFaviconMethod"
-        class="my-4 flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">Change
-        Favicon Color</button>
-
     <div class="flex mb-4" v-if="!showForm">
 
         <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."

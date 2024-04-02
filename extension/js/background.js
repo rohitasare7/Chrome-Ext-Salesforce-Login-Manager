@@ -1,5 +1,4 @@
 /*global chrome*/
-console.log('background.js loaded');
 let recIdReceived = false;
 let faviconColorReceived = false;
 let recIdToUpdateFavicon = null;
@@ -7,40 +6,23 @@ let faviconColorToUpdateFavicon = null;
 
 // Listen for messages from login.js
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    console.log('inside onMessage');
     if (message.type === 'passRecId') {
-        console.log('inside passRecId event -->' + message.recId);
         recIdToUpdateFavicon = message.recId;
         recIdReceived = true;
         const faviconColorFromStorage = await fetchItemData(message.recId);
-        console.log('favicon color :', faviconColorFromStorage);
         if (faviconColorFromStorage) {
             faviconColorToUpdateFavicon = faviconColorFromStorage;
-            //sendMessageToUpdateFavicon1(faviconColorFromStorage);
         }
     }
 });
 
-// Function to send message to content script to update favicon
-const sendMessageToUpdateFavicon1 = (colorValue) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs.length > 0) {
-            chrome.tabs.sendMessage(tabs[0].id, { type: 'updateFaviconColor', color: colorValue });
-        }
-    });
-};
-
-
 // Listen for tab updates
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    console.log('inside onUpdated');
+    //console.log('inside onUpdated');
     // Check if the tab has finished loading and has a valid URL
     if (changeInfo.status === 'complete' && tab.url) {
         const orgUrl = getOrgUrl(tab.url);
-        //console.log('Org URL:', orgUrl);
         if (orgUrl && isSalesforceUrl(orgUrl)) {
-            console.log('recIdToUpdateFavicon --> ' + recIdToUpdateFavicon);
-            console.log('faviconColorToUpdateFavicon --> ' + faviconColorToUpdateFavicon);
             if (recIdToUpdateFavicon && faviconColorToUpdateFavicon) {
                 const faviconColorFromStorage = await fetchItemData(recIdToUpdateFavicon);
                 sendMessageToUpdateFavicon(tabId, faviconColorFromStorage, extractValue(orgUrl));
@@ -48,7 +30,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 // Reset recIdToUpdateFavicon and faviconColorToUpdateFavicon after use
                 recIdToUpdateFavicon = null;
                 faviconColorToUpdateFavicon = null;
-                console.log('inside 1st block - sendMessageToUpdateFavicon ');
             }
         } else {
             //console.log('Invalid org URL:', tab.url);
@@ -68,13 +49,11 @@ const isSalesforceUrl = (url) => {
     return salesforceDomains.some(domain => url.includes(domain));
 };
 
-
 // Function to extract the org URL from the full URL
 const getOrgUrl = (fullUrl) => {
     const urlParts = fullUrl.split('/');
     return urlParts.slice(0, 3).join('/');
 };
-
 
 // Function to extract the desired value from the URL
 function extractValue(url) {
@@ -105,8 +84,8 @@ function extractValue(url) {
     return null;
 }
 
+// Check if the extractValue is present in the current URL
 function isValidUrl(url, extractValue) {
-    // Check if the extractValue is present in the current URL
     return url.includes(extractValue);
 }
 
@@ -131,7 +110,6 @@ const fetchItemData = async (index) => {
                     return null;
                 }
             });
-            //console.log('faviconColor resolve -->', itemData.faviconColor);
             resolve(itemData.faviconColor);
         });
     });
@@ -156,6 +134,6 @@ async function updateRecordItem(id, orgIdenifierValue) {
     });
 
     chrome.storage.sync.set({ recordList: existingRecords }, () => {
-        console.log('bg.js data saved successfully');
+        // console.log('bg.js data saved successfully');
     });
 }
