@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         console.log('favicon color :', faviconColorFromStorage);
         if (faviconColorFromStorage) {
             faviconColorToUpdateFavicon = faviconColorFromStorage;
-            sendMessageToUpdateFavicon1(faviconColorFromStorage);
+            //sendMessageToUpdateFavicon1(faviconColorFromStorage);
         }
     }
 });
@@ -39,9 +39,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const orgUrl = getOrgUrl(tab.url);
         //console.log('Org URL:', orgUrl);
         if (orgUrl && isSalesforceUrl(orgUrl)) {
-            console.log('orgUrl --> ' + orgUrl);
-            console.log('extractValue --> ' + extractValue(orgUrl));
-            console.log('isValidUrl --> ' + isValidUrl(orgUrl, extractValue(orgUrl)));
+            console.log('recIdToUpdateFavicon --> ' + recIdToUpdateFavicon);
+            console.log('faviconColorToUpdateFavicon --> ' + faviconColorToUpdateFavicon);
             if (recIdToUpdateFavicon && faviconColorToUpdateFavicon) {
                 const faviconColorFromStorage = await fetchItemData(recIdToUpdateFavicon);
                 sendMessageToUpdateFavicon(tabId, faviconColorFromStorage, extractValue(orgUrl));
@@ -49,6 +48,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 // Reset recIdToUpdateFavicon and faviconColorToUpdateFavicon after use
                 recIdToUpdateFavicon = null;
                 faviconColorToUpdateFavicon = null;
+                console.log('inside 1st block - sendMessageToUpdateFavicon ');
             }
         } else {
             //console.log('Invalid org URL:', tab.url);
@@ -137,7 +137,9 @@ const fetchItemData = async (index) => {
     });
 };
 
+// Update the Org identifier on first login
 async function updateRecordItem(id, orgIdenifierValue) {
+    let updateChromeStorage = false;
     const existingRecords = await new Promise((resolve, reject) => {
         chrome.storage.sync.get('recordList', (result) => {
             const existingRecords = result.recordList || [];
@@ -146,9 +148,10 @@ async function updateRecordItem(id, orgIdenifierValue) {
     });
 
     existingRecords.map(item => {
-        if (id == item.id) {
+        if (id == item.id && item.orgIdentifier != orgIdenifierValue) {
             item.orgIdentifier = orgIdenifierValue;
             item.timeStamp = Date.now();
+            updateChromeStorage = true;
         }
     });
 

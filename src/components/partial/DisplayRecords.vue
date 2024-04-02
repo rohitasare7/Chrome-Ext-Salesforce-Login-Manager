@@ -190,11 +190,25 @@ const handleEvent = (data) => {
     }
     if (isEditing.value) {
         updateRecord(data.value.id, data.value);
-        childItemData.value = null;
+        //console.log('updateRecord --> ' + JSON.stringify(data.value));
+        //childItemData.value = null;
+        resetChildData();
     }
     else {
         saveRecord(data.value);
         childItemData.value = null;
+    }
+}
+
+const resetChildData = () => {
+    for (const key in childItemData.value) {
+        if (Object.hasOwnProperty.call(childItemData.value, key)) {
+            if (key === 'faviconColor') {
+                childItemData.value[key] = "#0d9dda";
+            } else {
+                childItemData.value[key] = null;
+            }
+        }
     }
 }
 
@@ -270,13 +284,13 @@ const openFileDialog = () => {
 }
 
 const callFaviconMethod = () => {
-// Send a message to the content script to update the favicon color
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  const activeTab = tabs[0];
-  console.log('activeTab --> '+JSON.stringify(activeTab));
-  chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
-  console.log('inside callFaviconMethod');
-});
+    // Send a message to the content script to update the favicon color
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        console.log('activeTab --> ' + JSON.stringify(activeTab));
+        chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
+        console.log('inside callFaviconMethod');
+    });
 
 
 }
@@ -292,7 +306,9 @@ onMounted(() => {
 
 <template>
 
-<button @click="callFaviconMethod" class="my-4 flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">Change Favicon Color</button>
+    <button @click="callFaviconMethod"
+        class="my-4 flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">Change
+        Favicon Color</button>
 
     <div class="flex mb-4" v-if="!showForm">
 
