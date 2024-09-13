@@ -70,7 +70,7 @@ const cancelForm = () => {
 }
 
 const fireEvent = (data) => {
-    if(data.value?.faviconColor === "#0d9dda"){
+    if (data.value?.faviconColor === "#0d9dda") {
         data.value.faviconColor = null;
     }
     emit('fireEvent', data);
@@ -176,6 +176,10 @@ const togglePasswordVisibility = () => {
                     class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold py-2 px-4 rounded-md">
                     Cancel
                 </button>
+                
+            </div>
+            <div class="flex items-center text-center justify-center mt-6">
+                <p class="text-sm text-gray-600 dark:text-gray-100 lg:text-xl sm:px-16 xl:px-48 text-center"><b>Note:</b> This record will be securely encrypted and stored locally in Chrome's storage, not on any external server.</p>
             </div>
 
         </div>
