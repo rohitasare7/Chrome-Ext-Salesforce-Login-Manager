@@ -63,25 +63,41 @@ const openTab = (index) => {
     });
 };
 
-const openWindow = (index, isIncognito) => {
-    //throw error if Incognito is disabled in extension settings
-    if (isIncognito) {
+// Function to check if incognito access is allowed (async)
+const checkIncognitoAccess = () => {
+    return new Promise((resolve) => {
         chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
             if (!isAllowedAccess) {
-                alert('please enable Incoginto Access for this extension');
-                return;
+                alert('Please enable Incognito Access for this extension');
+                resolve(false);
+            } else {
+                resolve(true);
             }
         });
-    }
-    let item = fetchItemData(index);
-    let orgURL = getOrgURL(item.orgType, item.orgURL);
-    const url = orgURL;
-    const username = item.username;
-    const pass = item.password;
-    chrome.windows.create({
-        url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
-        incognito: isIncognito
     });
+};
+
+const openWindow = async (index, isIncognito) => {
+    //throw error if Incognito is disabled in extension settings
+    let triggerWindow = true;
+
+    // Check if incognito access is required
+    if (isIncognito) {
+        triggerWindow = await checkIncognitoAccess();
+    }
+    console.log('triggerWindow --> ' + triggerWindow);
+
+    if (triggerWindow) {
+        let item = fetchItemData(index);
+        let orgURL = getOrgURL(item.orgType, item.orgURL);
+        const url = orgURL;
+        const username = item.username;
+        const pass = item.password;
+        chrome.windows.create({
+            url: `${chrome.runtime.getURL('login.html')}?url=${url}&pw=${pass}&un=${username}`,
+            incognito: isIncognito
+        });
+    }
 };
 
 // Handle edit functionality
@@ -335,9 +351,8 @@ onMounted(() => {
     <div v-if="!showSettings && !showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
-                <tr v-for="(item) in filteredRecords" :key="item.id"
-                    class="border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="text-sm px-4 py-1 min-w-48">
+                <tr v-for="(item) in filteredRecords" :key="item.id" class="border-b  dark:border-gray-700">
+                    <td class="text-sm px-4 py-1 max-w-44 dark:text-gray-100 break-words">
                         {{ item.name }}
                     </td>
                     <td class="mr-2">
@@ -349,7 +364,7 @@ onMounted(() => {
                             <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md mr-2"
                                 @click="openWindow(item.id, true)">Incognito</button>
                             <button @click="editItem(item.id)" class="mr-2" title="Edit record">
-                                <svg class="bg-slate-100 hover:bg-blue-600 text-blue-700 hover:text-white fill-current h-10 w-10 p-2 rounded-full border hover:border-border-blue-700 transition-colors duration-300"
+                                <svg class="bg-slate-100 hover:bg-blue-600 text-blue-700 hover:text-white fill-current h-10 w-10 p-2 rounded-full border hover:border-border-blue-700 dark:hover:border-border-blue-800 transition-colors duration-300"
                                     viewBox="0 -960 960 960">
                                     <path
                                         d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h261q20 0 30 12.5t10 27.5q0 15-10.5 27.5T460-760H200v560h560v-261q0-20 12.5-30t27.5-10q15 0 27.5 10t12.5 30v261q0 33-23.5 56.5T760-120H200Zm280-360Zm-120 80v-97q0-16 6-30.5t17-25.5l344-344q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L553-384q-11 11-25.5 17.5T497-360h-97q-17 0-28.5-11.5T360-400Zm481-384-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
