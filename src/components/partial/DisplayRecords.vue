@@ -6,7 +6,7 @@ import { encrypt } from '@/assets/helper';
 
 // note : main storage list : recordList
 let records = ref([]);
-let storage = chrome.storage.sync;
+let storage = chrome.storage.local;
 let isEditing = ref(false);
 let showForm = ref(false);
 let childItemData = ref(null);
@@ -311,7 +311,6 @@ const callFaviconMethod = () => {
 
 
 }
-
 
 // Init
 onMounted(() => {

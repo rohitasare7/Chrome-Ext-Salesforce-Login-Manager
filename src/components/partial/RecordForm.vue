@@ -2,6 +2,7 @@
 /*global chrome*/
 import { ref, onMounted, watch, defineEmits } from 'vue';
 import { encrypt, decrypt } from '@/assets/helper';
+import TextDesc from '../elements/TextDesc.vue';
 
 // note : main storage list : recordList
 const props = defineProps({
@@ -93,6 +94,18 @@ const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
 };
 
+const getDateString = (date) => {
+    console.log('date --> ' + date);
+    var d = new Date(date);
+
+    var day = String(d.getDate()).padStart(2, '0');
+    var month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    var year = d.getFullYear();
+
+    var formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
+}
+
 // onMounted(() => {
 //     //Fetch existing data from Chrome storage
 //     //fetchData();
@@ -176,10 +189,14 @@ const togglePasswordVisibility = () => {
                     class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold py-2 px-4 rounded-md">
                     Cancel
                 </button>
-                
             </div>
-            <div class="flex items-center text-center justify-center mt-6">
-                <p class="text-sm text-gray-600 dark:text-gray-100 lg:text-xl sm:px-16 xl:px-48 text-center"><b>Note:</b> This record will be securely encrypted and stored locally in Chrome's storage, not on any external server.</p>
+
+            <div class="text-center justify-center mt-4">
+                <TextDesc v-if="props.itemData?.timeStamp">
+                    Last Modified Date : <b>{{ getDateString(props.itemData?.timeStamp) }}</b>
+                </TextDesc>
+                <TextDesc class="mt-4 px-4"><b>Note:</b> This record will be encrypted and stored locally in
+                    Your Chrome Browser's storage, not on any external server.</TextDesc>
             </div>
 
         </div>
