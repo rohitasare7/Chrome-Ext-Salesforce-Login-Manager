@@ -352,8 +352,15 @@ onMounted(() => {
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id" class="border-b  dark:border-gray-700">
-                    <td class="text-sm px-4 py-1 max-w-44 dark:text-gray-100 break-words">
-                        {{ item.name }}
+                    <td class=" px-4 py-1 inline-flex items-center">
+                        <div class="h-2 w-2 rounded-full mr-2" :class="{
+                            'bg-green-500 dark:bg-green-400': item.orgType === 'dev',
+                            'bg-blue-500 dark:bg-blue-400': item.orgType === 'prod',
+                            'bg-gray-500 dark:bg-gray-400': !item.orgType || (item.orgType !== 'dev' && item.orgType !== 'prod')
+                        }"></div>
+                        <span class="break-all max-w-44 text-sm text-gray-700 dark:text-gray-100">
+                            {{ item.name }}
+                        </span>
                     </td>
                     <td class="mr-2">
                         <div class="flex items-center justify-center my-1">
@@ -362,9 +369,14 @@ onMounted(() => {
                             <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
                                 @click="openWindow(item.id, false)"
                                 title="Open Salesforce Org in New Window">Window</button>
-                            <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md mr-2"
-                                @click="openWindow(item.id, true)"
-                                title="Open Salesforce Org in New Incognito Tab">Incognito</button>
+                            <button @click="openWindow(item.id, true)" class="mr-2"
+                                title="Open Salesforce Org in New Incognito Tab">
+                                <svg class="bg-gray-200/80 hover:bg-gray-600 dark:bg-gray-700 dark:text-gray-100 text-gray-700 hover:text-white fill-current p-2 h-10 w-10 rounded-full transition-colors duration-300"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.06 13C15.2 13 13.64 14.33 13.24 16.1C12.29 15.69 11.42 15.8 10.76 16.09C10.35 14.31 8.79 13 6.94 13C4.77 13 3 14.79 3 17C3 19.21 4.77 21 6.94 21C9 21 10.68 19.38 10.84 17.32C11.18 17.08 12.07 16.63 13.16 17.34C13.34 19.39 15 21 17.06 21C19.23 21 21 19.21 21 17C21 14.79 19.23 13 17.06 13M6.94 19.86C5.38 19.86 4.13 18.58 4.13 17S5.39 14.14 6.94 14.14C8.5 14.14 9.75 15.42 9.75 17S8.5 19.86 6.94 19.86M17.06 19.86C15.5 19.86 14.25 18.58 14.25 17S15.5 14.14 17.06 14.14C18.62 14.14 19.88 15.42 19.88 17S18.61 19.86 17.06 19.86M22 10.5H2V12H22V10.5M15.53 2.63C15.31 2.14 14.75 1.88 14.22 2.05L12 2.79L9.77 2.05L9.72 2.04C9.19 1.89 8.63 2.17 8.43 2.68L6 9H18L15.56 2.68L15.53 2.63Z" />
+                                </svg>
+                            </button>
                             <button @click="editItem(item.id)" class="mr-2" title="Edit record">
                                 <svg class="bg-gray-200/80 hover:bg-blue-600 dark:bg-blue-800 dark:text-gray-100 text-blue-700 hover:text-white fill-current h-10 w-10 p-2 rounded-full transition-colors duration-300"
                                     viewBox="0 -960 960 960">
@@ -393,7 +405,7 @@ onMounted(() => {
 
     <div v-if="showSettings && !showForm">
         <div class="flex items-center justify-center mt-8">
-            <h3 class="text-3xl font-bold dark:text-white text-blue-950">Import or Export your credentials.</h3>
+            <h3 class="text-3xl font-bold dark:text-white text-blue-950 m-5">Import or Export your credentials.</h3>
             <button @click="exportRecords"
                 class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
                 <svg class="fill-white" width="24" height="24" viewBox="0 -960 960 960">
@@ -425,7 +437,7 @@ onMounted(() => {
         <div class="flex items-end justify-end mt-10">
             <p class="text-gray-600 dark:text-gray-400">Salesforce Login Manager by <a
                     href="https://www.youtube.com/@ThatSalesforceGuy" target="_blank"
-                    class="text-blue-700 font-semibold">That Salesforce Guy</a></p>
+                    class="text-blue-700 dark:text-blue-200 font-semibold">That Salesforce Guy</a></p>
         </div>
 
     </div>

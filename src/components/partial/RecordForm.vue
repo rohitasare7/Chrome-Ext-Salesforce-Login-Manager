@@ -95,7 +95,7 @@ const togglePasswordVisibility = () => {
 };
 
 const getDateString = (date) => {
-    console.log('date --> ' + date);
+    //console.log('date --> ' + date);
     var d = new Date(date);
 
     var day = String(d.getDate()).padStart(2, '0');
