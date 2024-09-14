@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5 dark:bg-gray-900 antialiased" style="max-width: 700px; min-width: 600px;">
+  <div class="p-5 bg-gray-100 dark:bg-gray-900 antialiased" style="max-width: 700px; min-width: 600px;">
     <Main />
   </div>
 </template>

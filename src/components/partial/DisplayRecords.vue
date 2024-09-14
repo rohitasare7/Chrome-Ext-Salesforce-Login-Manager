@@ -302,6 +302,7 @@ const openFileDialog = () => {
     importFile.value.click();
 }
 
+/*
 const callFaviconMethod = () => {
     // Send a message to the content script to update the favicon color
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -310,10 +311,14 @@ const callFaviconMethod = () => {
         chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
         console.log('inside callFaviconMethod');
     });
-}
+}*/
 
+//Show Import / Export
+const toggleSettings = () => {
+    showSettings.value = !showSettings.value;
+    showHelp.value = false;
+};
 //Show help
-
 const toggleShowHelp = () => {
     showHelp.value = !showHelp.value;
 };
@@ -338,18 +343,18 @@ onMounted(() => {
     <div class="flex mb-4" v-if="!showForm">
 
         <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."
-            class="max-w-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+            class="max-w-64 bg-white placeholder:text-gray-500 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
         <button @click="showForm = true" title="Add a new Salesforce Org"
-            class="flex items-center py-[1.5] px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
+            class="flex items-center py-[1.5] px-4 text-white text-sm font-semibold bg-blue-700 rounded-3xl hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
             <svg class="fill-white" width="24" height="24" viewBox="0 -960 960 960">
                 <path
                     d="M440-501Zm0 381L313-234q-72-65-123.5-116t-85-96q-33.5-45-49-87T40-621q0-94 63-156.5T260-840q52 0 99 22t81 62q34-40 81-62t99-22q81 0 136 45.5T831-680h-85q-18-40-53-60t-73-20q-51 0-88 27.5T463-660h-46q-31-45-70.5-72.5T260-760q-57 0-98.5 39.5T120-621q0 33 14 67t50 78.5q36 44.5 98 104T440-228q26-23 61-53t56-50l9 9 19.5 19.5L605-283l9 9q-22 20-56 49.5T498-172l-58 52Zm280-160v-120H600v-80h120v-120h80v120h120v80H800v120h-80Z" />
             </svg>
             <span class="ml-2">Save Login</span>
         </button>
-        <button @click="showSettings = !showSettings" class="flex items-end mr-2" title="Export or Import Data">
-            <svg class="bg-gray-200/80 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 hover:text-white fill-current h-10 w-10 p-2 rounded-full transition-colors duration-300"
+        <button @click="toggleSettings" class="flex items-end mr-2" title="Export or Import Data">
+            <svg class="bg-white dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 hover:text-white fill-current h-10 w-10 p-2 rounded-full transition-colors duration-300"
                 viewBox="0 -960 960 960">
                 <path
                     d="M480-480Zm280 360H440q-17 0-28.5-11.5T400-160q0-17 11.5-28.5T440-200h320v-560H200v120q0 17-11.5 28.5T160-600q-17 0-28.5-11.5T120-640v-120q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120ZM265-80q-79 0-134.5-55.5T75-270q0-57 29.5-102t77.5-68h-62q-17 0-28.5-11.5T80-480q0-17 11.5-28.5T120-520h160q17 0 28.5 11.5T320-480v160q0 17-11.5 28.5T280-280q-17 0-28.5-11.5T240-320v-57q-37 8-61 38t-24 69q0 46 32.5 78t77.5 32q17 0 28.5 11.5T305-120q0 17-11.5 28.5T265-80Zm175-200h80q17 0 28.5-11.5T560-320q0-17-11.5-28.5T520-360h-80q-17 0-28.5 11.5T400-320q0 17 11.5 28.5T440-280Zm0-160h200q17 0 28.5-11.5T680-480q0-17-11.5-28.5T640-520H440q-17 0-28.5 11.5T400-480q0 17 11.5 28.5T440-440ZM320-600h320q17 0 28.5-11.5T680-640q0-17-11.5-28.5T640-680H320q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Z" />
@@ -357,7 +362,7 @@ onMounted(() => {
         </button>
 
         <button @click="toggleShowHelp" class="flex items-end mr-2" title="Need Help? Click Me!">
-            <svg class="h-10 w-10 rounded-full bg-green-100 fill-current p-2 text-green-600 transition-colors duration-300 hover:bg-green-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
+            <svg class="h-10 w-10 rounded-full bg-white fill-current p-2 text-green-600 transition-colors duration-300 hover:bg-green-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path fill="currentColor"
                     d="M12 7q-.825 0-1.412-.587T10 5t.588-1.412T12 3t1.413.588T14 5t-.587 1.413T12 7m0 14q-.625 0-1.062-.437T10.5 19.5v-9q0-.625.438-1.062T12 9t1.063.438t.437 1.062v9q0 .625-.437 1.063T12 21" />
@@ -368,7 +373,8 @@ onMounted(() => {
 
     <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
 
-    <div v-if="!showSettings && !showForm && !showHelp && filteredRecords.length > 0" class="container mx-auto mb-4">
+    <div v-if="!showSettings && !showForm && !showHelp && filteredRecords.length > 0"
+        class="container mx-auto mb-4 bg-white dark:bg-gray-800 rounded-2xl p-2">
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id" class="border-b  dark:border-gray-700">
@@ -384,11 +390,11 @@ onMounted(() => {
                             </span>
                         </div>
                     </td>
-                    <td class="mr-2">
-                        <div class="flex items-center justify-center my-1">
-                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+                    <td class="mr-2 pr-2">
+                        <div class="flex items-center justify-end my-1">
+                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-3xl mr-2"
                                 @click="openTab(item.id)" title="Open Salesforce Org in New Tab">New Tab</button>
-                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+                            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-3xl mr-2"
                                 @click="openWindow(item.id, false)"
                                 title="Open Salesforce Org in New Window">Window</button>
                             <button @click="openWindow(item.id, true)" class="mr-2"
@@ -426,10 +432,10 @@ onMounted(() => {
     </div>
 
     <div v-if="showSettings && !showForm && !showHelp">
-        <div class="flex items-center justify-center mt-8">
+        <div class="flex items-center justify-center mt-8 bg-white dark:bg-gray-800 rounded-2xl">
             <h3 class="text-3xl font-bold dark:text-white text-blue-950 m-5">Import or Export your credentials.</h3>
             <button @click="exportRecords"
-                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-3xl hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
                 <svg class="fill-white" width="24" height="24" viewBox="0 -960 960 960">
                     <path
                         d="M480-337q-8 0-15-2.5t-13-8.5L308-492q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T365-549l75 75v-286q0-17 11.5-28.5T480-800q17 0 28.5 11.5T520-760v286l75-75q12-12 28.5-11.5T652-548q11 12 11.5 28T652-492L508-348q-6 6-13 8.5t-15 2.5ZM240-160q-33 0-56.5-23.5T160-240v-80q0-17 11.5-28.5T200-360q17 0 28.5 11.5T240-320v80h480v-80q0-17 11.5-28.5T760-360q17 0 28.5 11.5T800-320v80q0 33-23.5 56.5T720-160H240Z" />
@@ -438,7 +444,7 @@ onMounted(() => {
             </button>
 
             <button @click="openFileDialog"
-                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-md hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-blue-700 rounded-3xl hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
                 <svg class="fill-white" width="24" height="24" viewBox="0 -960 960 960">
                     <path
                         d="M480-337q-8 0-15-2.5t-13-8.5L308-492q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T365-549l75 75v-286q0-17 11.5-28.5T480-800q17 0 28.5 11.5T520-760v286l75-75q12-12 28.5-11.5T652-548q11 12 11.5 28T652-492L508-348q-6 6-13 8.5t-15 2.5ZM240-160q-33 0-56.5-23.5T160-240v-80q0-17 11.5-28.5T200-360q17 0 28.5 11.5T240-320v80h480v-80q0-17 11.5-28.5T760-360q17 0 28.5 11.5T800-320v80q0 33-23.5 56.5T720-160H240Z" />
@@ -448,7 +454,7 @@ onMounted(() => {
             <input type="file" id="importFile" ref="importFile" @change="handleFileChange" class="hidden">
             <!-- <input type="file" id="importFile" ref="importFile" @change="handleFileChange" class="hidden"> -->
             <button @click="showSettings = !showSettings"
-                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-gray-700 rounded-md hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
+                class="flex items-center py-2 px-4 text-white text-sm font-semibold bg-gray-700 rounded-3xl hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700 mr-4">
                 <svg class="fill-white" width="24" height="24" viewBox="0 -960 960 960">
                     <path
                         d="m273-480 116 116q12 12 11.5 28T388-308q-12 11-28 11.5T332-308L148-492q-12-12-12-28t12-28l184-184q11-11 27.5-11t28.5 11q12 12 12 28.5T388-675L273-560h367q83 0 141.5 58.5T840-360v120q0 17-11.5 28.5T800-200q-17 0-28.5-11.5T760-240v-120q0-50-35-85t-85-35H273Z" />
@@ -472,7 +478,7 @@ onMounted(() => {
                 <p class="text-sm">Your data is saved locally in Chrome's Local Storage and not on any external server.
                     Check the security policy <a
                         href="https://rohitasare7.github.io/Chrome-Ext-Salesforce-Login-Manager/#security"
-                        class="text-blue-600 dark:text-blue-400 underline" target="_blank">here</a>.</p>
+                        class="text-blue-600 dark:text-blue-200 underline" target="_blank">here</a>.</p>
             </div>
 
             <div class="mb-4">
@@ -528,25 +534,25 @@ onMounted(() => {
             </div>
         </div>
 
-
-        <div class="flex items-center justify-start mt-6 py-6 border-t">
-            <a class="text-blue-700 font-semibold mr-4" :href="webStoreURL" target="_blank">
-                <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2">Web Store
+        <div class="flex items-center justify-start mt-6 py-6 border-t dark:border-gray-500">
+            <a class="text-blue-700 font-semibold mr-1" :href="webStoreURL" target="_blank">
+                <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-3xl mr-2">Web Store
                     Link</button>
             </a>
 
-            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-3xl mr-2"
                 @click="triggerEmail">Share Extension</button>
         </div>
 
-        <TextDesc class="my-2">If you'd like to show your support, please consider subscribing to
-            <a class="text-blue-600 dark:text-blue-400 font-semibold" href="https://www.youtube.com/@ThatSalesforceGuy" target="_blank">That Salesforce Guy</a> YouTube
-            channel or sharing it with your colleagues.
+        <TextDesc class="my-2 text-gray-700 dark:text-gray-300">If you'd like to show your support, please consider
+            subscribing to Author's YouTube Channel :
+            <a class="text-blue-600 dark:text-blue-300 font-semibold" href="https://www.youtube.com/@ThatSalesforceGuy"
+                target="_blank">That Salesforce Guy</a> or sharing this extension with your colleagues.
         </TextDesc>
 
         <div class="mt-6 flex items-center justify-end">
             <button @click="toggleShowHelp"
-                class="bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 text-white py-2 px-4 rounded-md mr-2">Go
+                class="bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 text-white py-2 px-4 rounded-3xl mr-2">Go
                 Back</button>
         </div>
 
