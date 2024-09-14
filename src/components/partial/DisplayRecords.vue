@@ -3,6 +3,7 @@
 import { ref, onMounted, computed } from 'vue';
 import RecordForm from '@/components/partial/RecordForm';
 import { encrypt } from '@/assets/helper';
+import TextDesc from '../elements/TextDesc.vue';
 
 // note : main storage list : recordList
 let records = ref([]);
@@ -12,6 +13,7 @@ let showForm = ref(false);
 let childItemData = ref(null);
 const searchKey = ref('');
 let showSettings = ref(false);
+const showHelp = ref(false);
 
 const initData = () => {
     // storage.get('recordList', (result) => {
@@ -308,8 +310,19 @@ const callFaviconMethod = () => {
         chrome.tabs.sendMessage(activeTab.id, { type: 'updateFaviconColor', color: '#FF5733' });
         console.log('inside callFaviconMethod');
     });
+}
 
+//Show help
 
+const toggleShowHelp = () => {
+    showHelp.value = !showHelp.value;
+};
+
+const webStoreURL = 'https://chromewebstore.google.com/detail/salesforce-login-manager/beemdmmeeddbifmjlaiboldgnffddibd';
+
+const triggerEmail = () => {
+    const shareMessage = "Hey! checkout the Salesforce Login Manager! This Chrome extension will help you to log into your Salesforce org with ease! Check it out at Official Chrome Web Store : " + webStoreURL;
+    window.open('mailto:?subject=[Chrome Extension] Salesforce Login Manager&body=' + shareMessage);
 }
 
 // Init
@@ -341,26 +354,35 @@ onMounted(() => {
                 <path
                     d="M480-480Zm280 360H440q-17 0-28.5-11.5T400-160q0-17 11.5-28.5T440-200h320v-560H200v120q0 17-11.5 28.5T160-600q-17 0-28.5-11.5T120-640v-120q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120ZM265-80q-79 0-134.5-55.5T75-270q0-57 29.5-102t77.5-68h-62q-17 0-28.5-11.5T80-480q0-17 11.5-28.5T120-520h160q17 0 28.5 11.5T320-480v160q0 17-11.5 28.5T280-280q-17 0-28.5-11.5T240-320v-57q-37 8-61 38t-24 69q0 46 32.5 78t77.5 32q17 0 28.5 11.5T305-120q0 17-11.5 28.5T265-80Zm175-200h80q17 0 28.5-11.5T560-320q0-17-11.5-28.5T520-360h-80q-17 0-28.5 11.5T400-320q0 17 11.5 28.5T440-280Zm0-160h200q17 0 28.5-11.5T680-480q0-17-11.5-28.5T640-520H440q-17 0-28.5 11.5T400-480q0 17 11.5 28.5T440-440ZM320-600h320q17 0 28.5-11.5T680-640q0-17-11.5-28.5T640-680H320q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Z" />
             </svg>
-            <!-- <span class="ml-1">Settings</span> -->
+        </button>
+
+        <button @click="toggleShowHelp" class="flex items-end mr-2" title="Need Help? Click Me!">
+            <svg class="h-10 w-10 rounded-full bg-green-100 fill-current p-2 text-green-600 transition-colors duration-300 hover:bg-green-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M12 7q-.825 0-1.412-.587T10 5t.588-1.412T12 3t1.413.588T14 5t-.587 1.413T12 7m0 14q-.625 0-1.062-.437T10.5 19.5v-9q0-.625.438-1.062T12 9t1.063.438t.437 1.062v9q0 .625-.437 1.063T12 21" />
+            </svg>
         </button>
 
     </div>
 
     <RecordForm v-if="showForm" :itemData="childItemData" @fireEvent="handleEvent" />
 
-    <div v-if="!showSettings && !showForm && filteredRecords.length > 0" class="container mx-auto mb-4">
+    <div v-if="!showSettings && !showForm && !showHelp && filteredRecords.length > 0" class="container mx-auto mb-4">
         <table class="table-auto w-full border-collapse" id="mainTable">
             <tbody>
                 <tr v-for="(item) in filteredRecords" :key="item.id" class="border-b  dark:border-gray-700">
-                    <td class=" px-4 py-1 inline-flex items-center">
-                        <div class="h-2 w-2 rounded-full mr-2" :class="{
-                            'bg-green-500 dark:bg-green-400': item.orgType === 'dev',
-                            'bg-blue-500 dark:bg-blue-400': item.orgType === 'prod',
-                            'bg-gray-500 dark:bg-gray-400': !item.orgType || (item.orgType !== 'dev' && item.orgType !== 'prod')
-                        }"></div>
-                        <span class="break-all max-w-44 text-sm text-gray-700 dark:text-gray-100">
-                            {{ item.name }}
-                        </span>
+                    <td class=" px-4 py-1">
+                        <div class="flex items-center my-1">
+                            <div class="h-2 w-2 rounded-full mr-2" :class="{
+                                'bg-green-500 dark:bg-green-400': item.orgType === 'dev',
+                                'bg-blue-500 dark:bg-blue-400': item.orgType === 'prod',
+                                'bg-gray-500 dark:bg-gray-400': !item.orgType || (item.orgType !== 'dev' && item.orgType !== 'prod')
+                            }"></div>
+                            <span class="break-all max-w-44 text-sm text-gray-700 dark:text-gray-100">
+                                {{ item.name }}
+                            </span>
+                        </div>
                     </td>
                     <td class="mr-2">
                         <div class="flex items-center justify-center my-1">
@@ -403,7 +425,7 @@ onMounted(() => {
             "Save Login" button to create a record.</p>
     </div>
 
-    <div v-if="showSettings && !showForm">
+    <div v-if="showSettings && !showForm && !showHelp">
         <div class="flex items-center justify-center mt-8">
             <h3 class="text-3xl font-bold dark:text-white text-blue-950 m-5">Import or Export your credentials.</h3>
             <button @click="exportRecords"
@@ -438,6 +460,94 @@ onMounted(() => {
             <p class="text-gray-600 dark:text-gray-400">Salesforce Login Manager by <a
                     href="https://www.youtube.com/@ThatSalesforceGuy" target="_blank"
                     class="text-blue-700 dark:text-blue-200 font-semibold">That Salesforce Guy</a></p>
+        </div>
+    </div>
+
+    <div v-if="showHelp" class="bg-white dark:bg-gray-700 p-4 rounded-xl mt-4">
+        <div class="text-gray-900 dark:text-gray-100">
+            <h2 class="text-xl font-bold mb-4">Frequently Asked Questions (FAQ)</h2>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold">1. How is data stored?</h3>
+                <p class="text-sm">Your data is saved locally in Chrome's Local Storage and not on any external server.
+                    Check the security policy <a
+                        href="https://rohitasare7.github.io/Chrome-Ext-Salesforce-Login-Manager/#security"
+                        class="text-blue-600 dark:text-blue-400 underline" target="_blank">here</a>.</p>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold">2. How to identify org - the colored dot before the name</h3>
+                <p class="text-sm mb-1">You'll see a small colored dot before the saved login name:</p>
+
+                <ul class="list-none list-inside text-sm flex flex-col">
+                    <li class="inline-flex items-center mb-2">
+                        <div class="h-2 w-2 rounded-full mr-2 bg-green-500 dark:bg-green-400"></div>
+                        <span>Green = Sandbox</span>
+                    </li>
+                    <li class="inline-flex items-center mb-2">
+                        <div class="h-2 w-2 rounded-full mr-2 bg-blue-500 dark:bg-blue-400"></div>
+                        <span>Blue = Production</span>
+                    </li>
+                    <li class="inline-flex items-center mb-2">
+                        <div class="h-2 w-2 rounded-full mr-2 bg-gray-500 dark:bg-gray-400"></div>
+                        <span>Gray = Custom org</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-base font-semibold">3. What are the ways to log in to a Salesforce org?</h3>
+                <p class="text-sm">You can log in using:</p>
+                <ul class="list-disc list-inside text-sm">
+                    <li>New Tab</li>
+                    <li>New Window</li>
+                    <li>Incognito (Enable this in Extension Settings)</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-base font-semibold">4. Can I edit saved logins?</h3>
+                <p class="text-sm">Yes, you can edit any saved login.</p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-base font-semibold">5. Can I delete a login?</h3>
+                <p class="text-sm">Yes, you can delete it permanently from Chrome's Local Storage.</p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-base font-semibold">6. Can I save my logins?</h3>
+                <p class="text-sm">Yes, use the Export feature to save your logins as a JSON file with encrypted
+                    usernames and passwords.</p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-base font-semibold">7. Will my data be lost if I uninstall the extension?</h3>
+                <p class="text-sm">Yes, uninstalling will delete all saved data from Chrome's Local Storage. After
+                    reinstalling, the data will be lost.</p>
+            </div>
+        </div>
+
+
+        <div class="flex items-center justify-start mt-6 py-6 border-t">
+            <a class="text-blue-700 font-semibold mr-4" :href="webStoreURL" target="_blank">
+                <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2">Web Store
+                    Link</button>
+            </a>
+
+            <button class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-md mr-2"
+                @click="triggerEmail">Share Extension</button>
+        </div>
+
+        <TextDesc class="my-2">If you'd like to show your support, please consider subscribing to
+            <a class="text-blue-600 dark:text-blue-400 font-semibold" href="https://www.youtube.com/@ThatSalesforceGuy" target="_blank">That Salesforce Guy</a> YouTube
+            channel or sharing it with your colleagues.
+        </TextDesc>
+
+        <div class="mt-6 flex items-center justify-end">
+            <button @click="toggleShowHelp"
+                class="bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 text-white py-2 px-4 rounded-md mr-2">Go
+                Back</button>
         </div>
 
     </div>
