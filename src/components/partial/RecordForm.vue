@@ -95,7 +95,7 @@ const togglePasswordVisibility = () => {
 };
 
 const getDateString = (date) => {
-    console.log('date --> ' + date);
+    //console.log('date --> ' + date);
     var d = new Date(date);
 
     var day = String(d.getDate()).padStart(2, '0');
@@ -182,11 +182,11 @@ const getDateString = (date) => {
             </div>
             <div class="flex items-center justify-center">
                 <button type="submit"
-                    class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-md mr-2">
+                    class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-3xl mr-2">
                     Submit
                 </button>
                 <button @click="cancelForm" type="button"
-                    class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold py-2 px-4 rounded-md">
+                    class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold py-2 px-4 rounded-3xl">
                     Cancel
                 </button>
             </div>
