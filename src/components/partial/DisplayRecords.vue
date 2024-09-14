@@ -343,7 +343,7 @@ onMounted(() => {
     <div class="flex mb-4" v-if="!showForm">
 
         <input type="text" id="searchRecord" v-model="searchKey" placeholder="Search.."
-            class="max-w-64 bg-white placeholder:text-gray-500 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
+            class="max-w-64 bg-white placeholder:text-gray-500 border border-gray-100 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !outline-none">
 
         <button @click="showForm = true" title="Add a new Salesforce Org"
             class="flex items-center py-[1.5] px-4 text-white text-sm font-semibold bg-blue-700 rounded-3xl hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 mx-4">
